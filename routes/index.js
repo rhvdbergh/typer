@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var list = require('../word_lists/nt_greek');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/list', function (req, res, next) {
+	res.json(list);
 });
+
 
 module.exports = router;
