@@ -1,17 +1,25 @@
 async function main() {
 	const wordContainer = document.getElementById('word_container');
 	const wordInput = document.getElementById('word_input');
+	const inputTest = document.getElementById('input_test');
 	let register = '';
 
 	const evaluateKeyPress = (evt) => {
-		if (wordInput.value === currentWord) {
-			console.log('bang!');
+		console.log(`key pressed: `, evt.key)
+		if (evt.key !== 'Backspace') {
+			register = wordInput.value;
+			if (register === currentWord) {
+				console.log('bang!');
+			}
+			inputTest.innerText = wordInput.value;
+		} else {
+			wordInput.value = register;
 		}
 		console.log(`word input is`, wordInput.value);
 		wordInput.focus();
 	}
 
-	window.addEventListener("keydown", evaluateKeyPress);
+	window.addEventListener("keyup", evaluateKeyPress);
 	window.addEventListener("click", () => wordInput.focus());
 
 	const words = await getLevelWords();
