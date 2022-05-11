@@ -21,7 +21,11 @@ async function main() {
 			currentWord = pickRandomWordFrom(words);
 			wordContainer.innerText = currentWord;
 			wordInput.value = '';
+		} else if (currentWord.substring(0, wordInput.value.length) !== wordInput.value) {
+			wordInput.value = '';
 		}
+
+
 		inputTest.innerText = wordInput.value;
 
 		console.log(`word input is`, wordInput.value);
