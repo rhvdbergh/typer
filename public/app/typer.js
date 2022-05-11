@@ -2,11 +2,25 @@ async function main() {
 	const wordContainer = document.getElementById('word_container');
 	const wordInput = document.getElementById('word_input');
 	const inputTest = document.getElementById('input_test');
+	let score = 0;
+	let level = 1;
+	let words = await getLevelWords(level);
+	let currentWord = pickRandomWordFrom(words);
 
-	const evaluateKeyPress = (evt) => {
+	const evaluateKeyPress = async (evt) => {
 		console.log(`key pressed: `, evt.key)
+		console.log('words', words);
 		if (wordInput.value === currentWord) {
-			console.log('bang!');
+			// we have a match!
+			score++;
+			words = removeFromWords(currentWord, words);
+			if (words.length === 0) {
+				level++;
+				await getLevelWords(level);
+			}
+			currentWord = pickRandomWordFrom(words);
+			wordContainer.innerText = currentWord;
+			wordInput.value = '';
 		}
 		inputTest.innerText = wordInput.value;
 
@@ -23,20 +37,23 @@ async function main() {
 	})
 	window.addEventListener("click", () => wordInput.focus());
 
-	const words = await getLevelWords();
-	const currentWord = pickRandomWordFrom(words);
-
 	wordContainer.innerText = currentWord;
 };
 
 main();
 
-async function getLevelWords() {
-	const response = await fetch('/words/level/3');
+async function getLevelWords(level) {
+	const response = await fetch(`/words/level/${level}`);
 	const words = await response.json();
 	return words;
 }
 
 const pickRandomWordFrom = (words) => {
 	return words[Math.floor(Math.random() * words.length)];
+}
+
+const removeFromWords = (word, words) => {
+	let index = words.indexOf(word);
+	words.splice(index, 1);
+	return words;
 }
