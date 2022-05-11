@@ -16,7 +16,7 @@ async function main() {
 			words = removeFromWords(currentWord, words);
 			if (words.length === 0) {
 				level++;
-				await getLevelWords(level);
+				words = await getLevelWords(level);
 			}
 			currentWord = pickRandomWordFrom(words);
 			wordContainer.innerText = currentWord;
