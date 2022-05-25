@@ -7,25 +7,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { wordInput, wordContainer, inputTest } from "./modules/setup";
+import { wordInput, wordContainer, inputTest } from "./modules/setup.js";
+import { wordService } from "./modules/wordService.js";
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         let score = 0;
         let level = 1;
-        let words = yield getLevelWords(level);
-        let currentWord = pickRandomWordFrom(words);
+        let words = yield wordService.getLevelWords(level);
+        let currentWord = wordService.pickRandomWordFrom(words);
         const evaluateKeyPress = (evt) => __awaiter(this, void 0, void 0, function* () {
             console.log(`key pressed: `, evt.key);
             console.log('words', words);
             if (wordInput && (wordInput === null || wordInput === void 0 ? void 0 : wordInput.value) === currentWord) {
                 // we have a match!
                 score++;
-                words = removeFromWords(currentWord, words);
+                words = wordService.removeFromWords(currentWord, words);
                 if (words.length === 0) {
                     level++;
-                    words = yield getLevelWords(level);
+                    words = yield wordService.getLevelWords(level);
                 }
-                currentWord = pickRandomWordFrom(words);
+                currentWord = wordService.pickRandomWordFrom(words);
                 if (wordContainer)
                     wordContainer.innerText = currentWord;
                 wordInput.value = '';
@@ -51,18 +52,3 @@ function main() {
 }
 ;
 main();
-function getLevelWords(level) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch(`/words/level/${level}`);
-        const words = yield response.json();
-        return words;
-    });
-}
-const pickRandomWordFrom = (words) => {
-    return words[Math.floor(Math.random() * words.length)];
-};
-const removeFromWords = (word, words) => {
-    let index = words.indexOf(word);
-    words.splice(index, 1);
-    return words;
-};

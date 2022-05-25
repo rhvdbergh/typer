@@ -1,23 +1,24 @@
-import {wordInput, wordContainer, inputTest} from "./modules/setup";
+import {wordInput, wordContainer, inputTest} from "./modules/setup.js";
+import {wordService} from "./modules/wordService.js";
 
 async function main() {
     let score = 0;
     let level = 1;
-    let words = await getLevelWords(level);
-    let currentWord = pickRandomWordFrom(words);
+    let levelWords = await wordService.getLevelWords(level);
+    let currentWord = wordService.pickRandomWordFrom(levelWords);
 
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
         console.log(`key pressed: `, evt.key)
-        console.log('words', words);
+        console.log('words', levelWords);
         if (wordInput && wordInput?.value === currentWord) {
             // we have a match!
             score++;
-            words = removeFromWords(currentWord, words);
-            if (words.length === 0) {
+            levelWords = wordService.removeFromWords(currentWord, levelWords);
+            if (levelWords.length === 0) {
                 level++;
-                words = await getLevelWords(level);
+                levelWords = await wordService.getLevelWords(level);
             }
-            currentWord = pickRandomWordFrom(words);
+            currentWord = wordService.pickRandomWordFrom(levelWords);
             if (wordContainer) wordContainer.innerText = currentWord;
             wordInput.value = '';
         } else if (wordInput && currentWord.substring(0, wordInput.value.length) !== wordInput.value) {
@@ -45,18 +46,3 @@ async function main() {
 
 main();
 
-async function getLevelWords(level: number) {
-    const response = await fetch(`/words/level/${level}`);
-    const words = await response.json();
-    return words;
-}
-
-const pickRandomWordFrom = (words: string[]) => {
-    return words[Math.floor(Math.random() * words.length)];
-}
-
-const removeFromWords = (word: string, words: string[]) => {
-    let index = words.indexOf(word);
-    words.splice(index, 1);
-    return words;
-}
