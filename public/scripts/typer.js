@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,11 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { wordInput, wordContainer, inputTest } from "./modules/setup";
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        const wordContainer = document.querySelector('#word_container');
-        const wordInput = document.querySelector('#word_input');
-        const inputTest = document.querySelector('#input_test');
         let score = 0;
         let level = 1;
         let words = yield getLevelWords(level);

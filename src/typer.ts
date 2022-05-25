@@ -1,7 +1,6 @@
+import {wordInput, wordContainer, inputTest} from "./modules/setup";
+
 async function main() {
-    const wordContainer: HTMLElement | null = document.querySelector('#word_container');
-    const wordInput: HTMLInputElement | null = document.querySelector('#word_input');
-    const inputTest: HTMLElement | null = document.querySelector('#input_test');
     let score = 0;
     let level = 1;
     let words = await getLevelWords(level);
