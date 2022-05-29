@@ -6,6 +6,12 @@ class WordService {
         return words;
     }
 
+    async getKeymap() {
+        const response = await fetch(`/words/keymap`);
+        const keymap = await response.json();
+        return keymap;
+    }
+
     pickRandomWordFrom(words: string[]) {
         return words[Math.floor(Math.random() * words.length)];
     }

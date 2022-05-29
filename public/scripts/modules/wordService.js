@@ -15,6 +15,13 @@ class WordService {
             return words;
         });
     }
+    getKeymap() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield fetch(`/words/keymap`);
+            const keymap = yield response.json();
+            return keymap;
+        });
+    }
     pickRandomWordFrom(words) {
         return words[Math.floor(Math.random() * words.length)];
     }

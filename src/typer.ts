@@ -1,16 +1,32 @@
-import {wordInput, wordContainer, inputTest} from "./modules/setup.js";
+import {wordContainer, inputTest} from "./modules/setup.js";
 import {wordService} from "./modules/wordService.js";
 
 async function main() {
     let score = 0;
     let level = 1;
+    let register = '';
+    let userWord = '';
     let levelWords = await wordService.getLevelWords(level);
     let currentWord = wordService.pickRandomWordFrom(levelWords);
+    const keymap = await wordService.getKeymap();
 
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
         console.log(`key pressed: `, evt.key)
         console.log('words', levelWords);
-        if (wordInput && wordInput?.value === currentWord) {
+        console.log('userWord before evaluation', userWord);
+        console.log('level is', level);
+
+        register += evt.key;
+        if (Object.keys(keymap).includes(register) && register.length <= 2) {
+
+            userWord += keymap[register];
+            register = '';
+        } else if (register.length >= 2) {
+            register = '';
+        }
+        console.log('register is', register);
+
+        if (userWord === currentWord) {
             // we have a match!
             score++;
             levelWords = wordService.removeFromWords(currentWord, levelWords);
@@ -20,16 +36,15 @@ async function main() {
             }
             currentWord = wordService.pickRandomWordFrom(levelWords);
             if (wordContainer) wordContainer.innerText = currentWord;
-            wordInput.value = '';
-        } else if (wordInput && currentWord.substring(0, wordInput.value.length) !== wordInput.value) {
-            wordInput.value = '';
+            userWord = '';
+        } else if (currentWord.substring(0, userWord.length) !== userWord) {
+            userWord = '';
         }
 
+        if (inputTest) inputTest.innerText = register;
 
-        if (inputTest && wordInput?.value) inputTest.innerText = wordInput?.value;
+        console.log('userWord after evaluation', userWord);
 
-        console.log(`word input is`, wordInput?.value);
-        wordInput?.focus();
     }
 
     window.addEventListener("keyup", evaluateKeyPress);
@@ -39,7 +54,6 @@ async function main() {
             e.preventDefault();
         }
     })
-    window.addEventListener("click", () => wordInput?.focus());
 
     if (wordContainer) wordContainer.innerText = currentWord;
 };
