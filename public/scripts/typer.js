@@ -22,7 +22,7 @@ function main() {
             console.log(`key pressed: `, evt.key);
             console.log('words', levelWords);
             console.log('userWord before evaluation', userWord);
-            console.log('level is', level);
+            console.log('level before evaluation is', level);
             register += evt.key;
             if (Object.keys(keymap).includes(register) && register.length <= 2) {
                 userWord += keymap[register];
@@ -51,6 +51,7 @@ function main() {
             if (inputTest)
                 inputTest.innerText = register;
             console.log('userWord after evaluation', userWord);
+            console.log('level after evaluation', level);
         });
         window.addEventListener("keyup", evaluateKeyPress);
         window.addEventListener("keydown", e => {
