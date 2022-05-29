@@ -7,8 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { wordContainer, inputTest } from "./modules/setup.js";
+import { wordContainer } from "./modules/setup.js";
 import { wordService } from "./modules/wordService.js";
+import { feedbackService } from "./modules/feedbackService.js";
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         let score = 0;
@@ -48,10 +49,15 @@ function main() {
             else if (currentWord.substring(0, userWord.length) !== userWord) {
                 userWord = '';
             }
-            if (inputTest)
-                inputTest.innerText = register;
             console.log('userWord after evaluation', userWord);
             console.log('level after evaluation', level);
+            feedbackService.updateFeedback({
+                level,
+                currentWord,
+                register,
+                score,
+                userWord
+            });
         });
         window.addEventListener("keyup", evaluateKeyPress);
         window.addEventListener("keydown", e => {

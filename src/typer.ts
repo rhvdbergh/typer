@@ -1,5 +1,6 @@
-import {wordContainer, inputTest} from "./modules/setup.js";
+import {wordContainer} from "./modules/setup.js";
 import {wordService} from "./modules/wordService.js";
+import {feedbackService} from "./modules/feedbackService.js";
 
 async function main() {
     let score = 0;
@@ -41,11 +42,16 @@ async function main() {
             userWord = '';
         }
 
-        if (inputTest) inputTest.innerText = register;
-
         console.log('userWord after evaluation', userWord);
         console.log('level after evaluation', level)
 
+        feedbackService.updateFeedback({
+            level,
+            currentWord,
+            register,
+            score,
+            userWord
+        })
     }
 
     window.addEventListener("keyup", evaluateKeyPress);
