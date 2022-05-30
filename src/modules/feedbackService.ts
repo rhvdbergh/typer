@@ -9,7 +9,7 @@ class FeedbackService {
          Score: ${stats.score} \n
          Register: ${stats.register} \n
          User Word: ${stats.userWord} \n
-         Current Word: ${stats.currentWord} \n
+         Current Word: ${stats.currentWords && stats.currentWords.map(x => x)} \n
          Visible Words: ${stats.visibleWords.map(x => `\n ${x.word}, PosY: ${x.posY}`)} \n`
     }
 }

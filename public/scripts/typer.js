@@ -16,20 +16,19 @@ function main() {
         let register = '';
         let userWord = '';
         let levelWords = yield wordService.getLevelWords(level);
-        let currentWord = null;
+        let currentWords = null;
         let visibleWords = new Array();
         // visibleWords.push(wordService.pickRandomWordFrom(levelWords));
         const keymap = yield wordService.getKeymap();
         feedbackService.updateFeedback({
             level,
-            currentWord,
+            currentWords: currentWords,
             register,
             score,
             userWord,
             visibleWords
         });
         const evaluateKeyPress = (evt) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
             // for now, we add a visible word each time, manually, on each keypress
             let newWordAdded = false;
             while (!newWordAdded && visibleWords.length !== levelWords.length) {
@@ -47,33 +46,35 @@ function main() {
             else if (register.length >= 2) {
                 register = '';
             }
-            if (currentWord === null) {
-                const word = (_a = visibleWords.find(x => x.word[0] === userWord)) === null || _a === void 0 ? void 0 : _a.word;
-                if (word !== undefined) {
-                    currentWord = word;
+            if (currentWords === null) {
+                const words = visibleWords.filter(x => x.word[0] === userWord).map(x => x.word);
+                if (words !== undefined) {
+                    currentWords = new Array();
+                    words.forEach(word => currentWords !== null && currentWords.push(word));
                 }
                 else {
                     userWord = '';
                 }
             }
-            if (userWord === currentWord) {
+            if (currentWords && currentWords.includes(userWord)) {
+                let index = currentWords.findIndex(x => x === userWord);
                 // we have a match!
                 score++;
-                wordService.removeFromWords(currentWord, levelWords, visibleWords);
+                wordService.removeFromWords(currentWords[index], levelWords, visibleWords);
                 if (levelWords.length === 0) {
                     level++;
                     levelWords = yield wordService.getLevelWords(level);
                 }
                 userWord = '';
-                currentWord = null;
+                currentWords = null;
             }
-            else if (currentWord && currentWord.substring(0, userWord.length) !== userWord) {
+            else if (currentWords && !currentWords.find(x => x.includes(userWord))) {
                 userWord = '';
-                currentWord = null;
+                currentWords = null;
             }
             feedbackService.updateFeedback({
                 level,
-                currentWord,
+                currentWords: currentWords,
                 register,
                 score,
                 userWord,

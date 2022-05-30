@@ -5,6 +5,6 @@ export interface IStats {
     level: number;
     register: string;
     userWord: string;
-    currentWord: string | null;
+    currentWords: string[] | null;
     visibleWords: IWord[];
 }

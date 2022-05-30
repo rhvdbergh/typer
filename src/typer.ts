@@ -8,13 +8,13 @@ async function main() {
     let register: string = '';
     let userWord: string = '';
     let levelWords: IWord[] = await wordService.getLevelWords(level);
-    let currentWord: string | null = null;
+    let currentWords: string[] | null = null;
     let visibleWords = new Array<IWord>();
     // visibleWords.push(wordService.pickRandomWordFrom(levelWords));
     const keymap = await wordService.getKeymap();
     feedbackService.updateFeedback({
         level,
-        currentWord,
+        currentWords: currentWords,
         register,
         score,
         userWord,
@@ -42,33 +42,37 @@ async function main() {
             register = '';
         }
 
-        if (currentWord === null) {
-            const word = visibleWords.find(x => x.word[0] === userWord)?.word;
-            if (word !== undefined) {
-                currentWord = word;
+        if (currentWords === null) {
+            const words = visibleWords.filter(x => x.word[0] === userWord).map(x => x.word);
+            if (words !== undefined) {
+                currentWords = new Array<string>();
+                words.forEach(word =>
+                    currentWords !== null && currentWords.push(word)
+                )
             } else {
                 userWord = '';
             }
         }
 
-        if (userWord === currentWord) {
+        if (currentWords && currentWords.includes(userWord)) {
+            let index = currentWords.findIndex(x => x === userWord);
             // we have a match!
             score++;
-            wordService.removeFromWords(currentWord, levelWords, visibleWords);
+            wordService.removeFromWords(currentWords[index], levelWords, visibleWords);
             if (levelWords.length === 0) {
                 level++;
                 levelWords = await wordService.getLevelWords(level);
             }
             userWord = '';
-            currentWord = null;
-        } else if (currentWord && currentWord.substring(0, userWord.length) !== userWord) {
+            currentWords = null;
+        } else if (currentWords && !currentWords.find(x => x.includes(userWord))) {
             userWord = '';
-            currentWord = null;
+            currentWords = null;
         }
 
         feedbackService.updateFeedback({
             level,
-            currentWord,
+            currentWords: currentWords,
             register,
             score,
             userWord,
