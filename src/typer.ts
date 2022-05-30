@@ -78,7 +78,6 @@ async function main() {
             userWord,
             visibleWords
         })
-
     }
 
     window.addEventListener("keyup", evaluateKeyPress);
