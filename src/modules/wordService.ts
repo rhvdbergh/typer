@@ -16,14 +16,15 @@ class WordService {
         return keymap;
     }
 
-    pickRandomWordFrom(words: string[]) {
+    pickRandomWordFrom(words: IWord[]) {
         return words[Math.floor(Math.random() * words.length)];
     }
 
-    removeFromWords(word: string, words: IWord[]) {
-        let index = words.map(x => x.word).indexOf(word);
-        words.splice(index, 1);
-        return words;
+    removeFromWords(word: string, levelWords: IWord[], visibleWords: IWord[]): void {
+        let index = levelWords.map(x => x.word).indexOf(word);
+        levelWords.splice(index, 1);
+        index = visibleWords.map(x => x.word).indexOf(word);
+        visibleWords.splice(index, 1);
     }
 }
 

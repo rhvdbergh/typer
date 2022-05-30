@@ -3,14 +3,14 @@ import {IStats} from "../models/IStats.js";
 
 class FeedbackService {
     updateFeedback(stats: IStats) {
-        console.log('updating feedback')
         if (feedback)
             feedback.innerText =
                 `Level: ${stats.level} \n
          Score: ${stats.score} \n
          Register: ${stats.register} \n
-         UserWord: ${stats.userWord} \n
-         CurrentWord: ${stats.currentWord}`
+         User Word: ${stats.userWord} \n
+         Current Word: ${stats.currentWord} \n
+         Visible Words: ${stats.visibleWords.map(x => `\n ${x.word}, PosY: ${x.posY}`)} \n`
     }
 }
 

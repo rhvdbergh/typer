@@ -56,7 +56,8 @@ const keymap = {
 	';o': 'ό',
 	';i': 'ί',
 	';u': 'ύ',
-	';v': 'ώ'
+	';v': 'ώ',
+	';h': 'ή'
 }
 
 module.exports = keymap;

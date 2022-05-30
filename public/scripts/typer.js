@@ -7,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { wordContainer } from "./modules/setup.js";
 import { wordService } from "./modules/wordService.js";
 import { feedbackService } from "./modules/feedbackService.js";
 function main() {
@@ -17,9 +16,29 @@ function main() {
         let register = '';
         let userWord = '';
         let levelWords = yield wordService.getLevelWords(level);
-        let currentWord = wordService.pickRandomWordFrom(levelWords.map(x => x.word));
+        let currentWord = null;
+        let visibleWords = new Array();
+        // visibleWords.push(wordService.pickRandomWordFrom(levelWords));
         const keymap = yield wordService.getKeymap();
+        feedbackService.updateFeedback({
+            level,
+            currentWord,
+            register,
+            score,
+            userWord,
+            visibleWords
+        });
         const evaluateKeyPress = (evt) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            // for now, we add a visible word each time, manually, on each keypress
+            let newWordAdded = false;
+            while (!newWordAdded && visibleWords.length !== levelWords.length) {
+                let newWord = wordService.pickRandomWordFrom(levelWords);
+                if (!visibleWords.some(x => x.word === newWord.word)) {
+                    visibleWords.push(newWord);
+                    newWordAdded = true;
+                }
+            }
             register += evt.key;
             if (Object.keys(keymap).includes(register) && register.length <= 2) {
                 userWord += keymap[register];
@@ -28,28 +47,37 @@ function main() {
             else if (register.length >= 2) {
                 register = '';
             }
+            if (currentWord === null) {
+                const word = (_a = visibleWords.find(x => x.word[0] === userWord)) === null || _a === void 0 ? void 0 : _a.word;
+                if (word !== undefined) {
+                    currentWord = word;
+                }
+                else {
+                    userWord = '';
+                }
+            }
             if (userWord === currentWord) {
                 // we have a match!
                 score++;
-                levelWords = wordService.removeFromWords(currentWord, levelWords);
+                wordService.removeFromWords(currentWord, levelWords, visibleWords);
                 if (levelWords.length === 0) {
                     level++;
                     levelWords = yield wordService.getLevelWords(level);
                 }
-                currentWord = wordService.pickRandomWordFrom(levelWords.map(x => x.word));
-                if (wordContainer)
-                    wordContainer.innerText = currentWord;
                 userWord = '';
+                currentWord = null;
             }
-            else if (currentWord.substring(0, userWord.length) !== userWord) {
+            else if (currentWord && currentWord.substring(0, userWord.length) !== userWord) {
                 userWord = '';
+                currentWord = null;
             }
             feedbackService.updateFeedback({
                 level,
                 currentWord,
                 register,
                 score,
-                userWord
+                userWord,
+                visibleWords
             });
         });
         window.addEventListener("keyup", evaluateKeyPress);
@@ -58,8 +86,6 @@ function main() {
                 e.preventDefault();
             }
         });
-        if (wordContainer)
-            wordContainer.innerText = currentWord;
     });
 }
 ;

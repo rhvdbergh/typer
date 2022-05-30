@@ -27,10 +27,11 @@ class WordService {
     pickRandomWordFrom(words) {
         return words[Math.floor(Math.random() * words.length)];
     }
-    removeFromWords(word, words) {
-        let index = words.map(x => x.word).indexOf(word);
-        words.splice(index, 1);
-        return words;
+    removeFromWords(word, levelWords, visibleWords) {
+        let index = levelWords.map(x => x.word).indexOf(word);
+        levelWords.splice(index, 1);
+        index = visibleWords.map(x => x.word).indexOf(word);
+        visibleWords.splice(index, 1);
     }
 }
 export const wordService = new WordService();
