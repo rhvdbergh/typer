@@ -1,5 +1,5 @@
-import {feedback} from "./setup.js";
-import {IStats} from "../models/IStats.js";
+import {feedback} from "./setup";
+import {IStats} from "../models/IStats";
 
 class FeedbackService {
     updateFeedback(stats: IStats) {
@@ -14,4 +14,4 @@ class FeedbackService {
     }
 }
 
-export const feedbackService = new FeedbackService();
+export default new FeedbackService();

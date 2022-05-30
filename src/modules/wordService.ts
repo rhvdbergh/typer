@@ -28,4 +28,4 @@ class WordService {
     }
 }
 
-export const wordService = new WordService();
+export default new WordService();

@@ -1,5 +1,5 @@
-import {wordService} from "./modules/wordService.js";
-import {feedbackService} from "./modules/feedbackService.js";
+import wordService from "./modules/wordService";
+import feedbackService from "./modules/feedbackService";
 import {IWord} from "./models/IWord";
 
 async function main() {
@@ -91,3 +91,15 @@ async function main() {
 
 main();
 
+import * as PIXI from 'pixi.js';
+
+const pixi = new PIXI.Application({width: 600, height: 600});
+document.body.appendChild(pixi.view);
+
+let sprite = PIXI.Sprite.from('./resources/sprites/sample.png');
+pixi.stage.addChild(sprite);
+let elapsed = 0.0;
+pixi.ticker.add((delta) => {
+    elapsed += delta;
+    sprite.x = 100.0 + Math.cos(elapsed / 50.0) * 100.0;
+})
