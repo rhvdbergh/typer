@@ -1,9 +1,13 @@
+import {IWord} from "../models/IWord";
+
 class WordService {
 
-    async getLevelWords(level: number) {
+    async getLevelWords(level: number): Promise<IWord[]> {
         const response = await fetch(`/words/level/${level}`);
-        const words = await response.json();
-        return words;
+        const words: string[] = await response.json();
+        return words.map(x => {
+            return {word: x, posX: 0, posY: 0}
+        });
     }
 
     async getKeymap() {
@@ -16,8 +20,8 @@ class WordService {
         return words[Math.floor(Math.random() * words.length)];
     }
 
-    removeFromWords(word: string, words: string[]) {
-        let index = words.indexOf(word);
+    removeFromWords(word: string, words: IWord[]) {
+        let index = words.map(x => x.word).indexOf(word);
         words.splice(index, 1);
         return words;
     }

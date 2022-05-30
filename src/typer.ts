@@ -1,21 +1,18 @@
 import {wordContainer} from "./modules/setup.js";
 import {wordService} from "./modules/wordService.js";
 import {feedbackService} from "./modules/feedbackService.js";
+import {IWord} from "./models/IWord";
 
 async function main() {
     let score = 0;
     let level = 1;
     let register = '';
     let userWord = '';
-    let levelWords = await wordService.getLevelWords(level);
-    let currentWord = wordService.pickRandomWordFrom(levelWords);
+    let levelWords: IWord[] = await wordService.getLevelWords(level);
+    let currentWord = wordService.pickRandomWordFrom(levelWords.map(x => x.word));
     const keymap = await wordService.getKeymap();
 
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
-        console.log(`key pressed: `, evt.key)
-        console.log('words', levelWords);
-        console.log('userWord before evaluation', userWord);
-        console.log('level before evaluation is', level);
 
         register += evt.key;
         if (Object.keys(keymap).includes(register) && register.length <= 2) {
@@ -25,7 +22,6 @@ async function main() {
         } else if (register.length >= 2) {
             register = '';
         }
-        console.log('register is', register);
 
         if (userWord === currentWord) {
             // we have a match!
@@ -35,15 +31,12 @@ async function main() {
                 level++;
                 levelWords = await wordService.getLevelWords(level);
             }
-            currentWord = wordService.pickRandomWordFrom(levelWords);
+            currentWord = wordService.pickRandomWordFrom(levelWords.map(x => x.word));
             if (wordContainer) wordContainer.innerText = currentWord;
             userWord = '';
         } else if (currentWord.substring(0, userWord.length) !== userWord) {
             userWord = '';
         }
-
-        console.log('userWord after evaluation', userWord);
-        console.log('level after evaluation', level)
 
         feedbackService.updateFeedback({
             level,

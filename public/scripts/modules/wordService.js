@@ -12,7 +12,9 @@ class WordService {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield fetch(`/words/level/${level}`);
             const words = yield response.json();
-            return words;
+            return words.map(x => {
+                return { word: x, posX: 0, posY: 0 };
+            });
         });
     }
     getKeymap() {
@@ -26,7 +28,7 @@ class WordService {
         return words[Math.floor(Math.random() * words.length)];
     }
     removeFromWords(word, words) {
-        let index = words.indexOf(word);
+        let index = words.map(x => x.word).indexOf(word);
         words.splice(index, 1);
         return words;
     }

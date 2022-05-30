@@ -17,13 +17,9 @@ function main() {
         let register = '';
         let userWord = '';
         let levelWords = yield wordService.getLevelWords(level);
-        let currentWord = wordService.pickRandomWordFrom(levelWords);
+        let currentWord = wordService.pickRandomWordFrom(levelWords.map(x => x.word));
         const keymap = yield wordService.getKeymap();
         const evaluateKeyPress = (evt) => __awaiter(this, void 0, void 0, function* () {
-            console.log(`key pressed: `, evt.key);
-            console.log('words', levelWords);
-            console.log('userWord before evaluation', userWord);
-            console.log('level before evaluation is', level);
             register += evt.key;
             if (Object.keys(keymap).includes(register) && register.length <= 2) {
                 userWord += keymap[register];
@@ -32,7 +28,6 @@ function main() {
             else if (register.length >= 2) {
                 register = '';
             }
-            console.log('register is', register);
             if (userWord === currentWord) {
                 // we have a match!
                 score++;
@@ -41,7 +36,7 @@ function main() {
                     level++;
                     levelWords = yield wordService.getLevelWords(level);
                 }
-                currentWord = wordService.pickRandomWordFrom(levelWords);
+                currentWord = wordService.pickRandomWordFrom(levelWords.map(x => x.word));
                 if (wordContainer)
                     wordContainer.innerText = currentWord;
                 userWord = '';
@@ -49,8 +44,6 @@ function main() {
             else if (currentWord.substring(0, userWord.length) !== userWord) {
                 userWord = '';
             }
-            console.log('userWord after evaluation', userWord);
-            console.log('level after evaluation', level);
             feedbackService.updateFeedback({
                 level,
                 currentWord,
