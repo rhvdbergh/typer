@@ -65,26 +65,26 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     userWordDisplay.x = 10;
     userWordDisplay.y = pixiHeight - userWordDisplay.height - 10;
 
-    let gameOverDisplay = new PIXI.Text(`GAME OVER!`, {
+    let messageDisplay = new PIXI.Text(`LEVEL ${level}!`, {
         fontSize: 100,
         fontWeight: "bolder",
         dropShadowColor: 'yellow',
         fill: ['#fff', '#aaa']
     });
 
-    gameOverDisplay.x = (pixiWidth / 2) - (gameOverDisplay.width / 2);
-    gameOverDisplay.y = (pixiHeight / 2) - (gameOverDisplay.height / 2);
+    messageDisplay.x = (pixiWidth / 2) - (messageDisplay.width / 2);
+    messageDisplay.y = (pixiHeight / 2) - (messageDisplay.height / 2);
 
-    pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay, userWordDisplay);
+    pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay, userWordDisplay, messageDisplay);
 
+    setTimeout(() => {
+        pixi.stage.removeChild(messageDisplay);
+    }, 3000)
     const triggerGet = async () => {
         stats.levelWords = await wordService.getLevelWords(stats.level);
     }
 
-    let loopCounter = 0;
     pixi.ticker.add((delta) => {
-
-        loopCounter++;
 
         // clean up; if a word has been deleted, destroy the pixi object
         let toBeDestroyed = shipContainers.filter(ship => !stats.visibleWords.includes(ship.word));
@@ -96,8 +96,9 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             })
         }
 
-        if (loopCounter > 200) {
-            loopCounter = 0;
+        let furthestShipY = shipContainers[shipContainers.length - 1].shipContainer.y;
+
+        if (furthestShipY > pixiHeight / 2) {
             let newWordAdded = false;
             while (!newWordAdded && stats.visibleWords.length !== stats.levelWords.length) {
                 let newWord = wordService.pickRandomWordFrom(stats.levelWords)
@@ -116,7 +117,8 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             let removeAtIndex: number | undefined = undefined;
             shipContainers.forEach((ship, index) => {
                     if (ship.shipContainer.y < pixiHeight - ship.shipContainer.height) {
-                        ship.shipContainer.y += delta;
+                        // set the ship speed
+                        ship.shipContainer.y += delta * level / 5;
                     } else {
                         stats.lives--;
                         removeAtIndex = index;
@@ -136,13 +138,25 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
         }
 
         if (stats.lives <= 0) {
-            pixi.stage.addChild(gameOverDisplay);
+            messageDisplay.text = `GAME OVER!`;
+            pixi.stage.addChild(messageDisplay);
             pixi.ticker.stop();
+            setTimeout(() => {
+                pixi.stage.removeChild(messageDisplay);
+                pixi.ticker.start();
+            }, 5000);
         }
 
         if (level != stats.level) {
             level = stats.level;
             levelDisplay.text = `Level: ${level}`;
+            messageDisplay.text = `Level ${level}`;
+            pixi.stage.addChild(messageDisplay);
+            pixi.ticker.stop();
+            setTimeout(() => {
+                pixi.stage.removeChild(messageDisplay);
+                pixi.ticker.start();
+            }, 3000)
         }
 
         if (score != stats.score) {
