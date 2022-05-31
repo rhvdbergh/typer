@@ -12,6 +12,10 @@ export async function setupView(stats: Stats) {
     const pixiHeight = window.innerHeight;
     const pixiWidth = window.innerWidth;
 
+    let level = stats.level;
+    let score = stats.score;
+    let lives = stats.lives;
+
     // set up the pixi app
     const pixi = new PIXI.Application({width: pixiWidth, height: pixiHeight});
     document.body.appendChild(pixi.view);
@@ -22,10 +26,41 @@ export async function setupView(stats: Stats) {
     let word = stats.visibleWords[0];
     shipContainers.push(initShipContainer(word));
 
-    pixi.stage.addChild(shipContainers[0].shipContainer);
+    // set up the level, score, and lives text
+    let scoreDisplay = new PIXI.Text(`Score: ${String(score)}`, {
+        fontSize: 24,
+        dropShadowColor: 'blue',
+        fill: ['#fff', '#aaa']
+    });
+
+    scoreDisplay.x = pixiWidth - 150;
+    scoreDisplay.y = 10;
+    let levelDisplay = new PIXI.Text(`Level: ${String(level)}`, {
+
+        fontSize: 24,
+        dropShadowColor: 'blue',
+        fill: ['#fff', '#aaa']
+    });
+
+    levelDisplay.x = pixiWidth - 300;
+    levelDisplay.y = 10;
+
+
+    let livesDisplay = new PIXI.Text(`Lives: ${String(lives)}`, {
+        fontSize: 24,
+        dropShadowColor: 'blue',
+        fill: ['#fff', '#aaa']
+    });
+
+    livesDisplay.x = pixiWidth - 450;
+    livesDisplay.y = 10;
+
+    pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay);
+
     const triggerGet = async () => {
         stats.levelWords = await wordService.getLevelWords(stats.level);
     }
+
     let loopCounter = 0;
     pixi.ticker.add((delta) => {
 
@@ -72,6 +107,7 @@ export async function setupView(stats: Stats) {
 
         if (stats.lives <= 0) {
             console.log('Game Over');
+            pixi.ticker.stop();
         }
 
         feedbackService.updateFeedback(stats);
@@ -87,9 +123,9 @@ function initShipContainer(initText: string): IShip {
 
     let shipContainer = new PIXI.Container();
 
-    shipContainer.y = 0;
-    shipContainer.x = randomX(shipContainer.x);
     shipContainer.addChild(text);
+    shipContainer.y = 0;
+    shipContainer.x = randomX(shipContainer.width);
 
     return {word: initText, shipContainer};
 }
