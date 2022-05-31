@@ -136,7 +136,6 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
         }
 
         if (stats.lives <= 0) {
-            console.log('Game Over');
             pixi.stage.addChild(gameOverDisplay);
             pixi.ticker.stop();
         }
