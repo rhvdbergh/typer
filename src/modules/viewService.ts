@@ -55,6 +55,16 @@ export async function setupView(stats: Stats) {
     livesDisplay.x = pixiWidth - 450;
     livesDisplay.y = 10;
 
+    let gameOverDisplay = new PIXI.Text(`GAME OVER!`, {
+        fontSize: 100,
+        fontWeight: "bolder",
+        dropShadowColor: 'yellow',
+        fill: ['#fff', '#aaa']
+    });
+
+    gameOverDisplay.x = (pixiWidth / 2) - (gameOverDisplay.width / 2);
+    gameOverDisplay.y = (pixiHeight / 2) - (gameOverDisplay.height / 2);
+
     pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay);
 
     const triggerGet = async () => {
@@ -107,6 +117,7 @@ export async function setupView(stats: Stats) {
 
         if (stats.lives <= 0) {
             console.log('Game Over');
+            pixi.stage.addChild(gameOverDisplay);
             pixi.ticker.stop();
         }
 
