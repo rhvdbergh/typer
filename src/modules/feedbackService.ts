@@ -1,16 +1,17 @@
 import {feedback} from "./setup";
-import {IStats} from "../models/IStats";
+import {Stats} from "../models/Stats";
 
 class FeedbackService {
-    updateFeedback(stats: IStats) {
+    updateFeedback(stats: Stats) {
         if (feedback)
             feedback.innerText =
                 `Level: ${stats.level} \n
          Score: ${stats.score} \n
+         Lives: ${stats.lives} \n
          Register: ${stats.register} \n
          User Word: ${stats.userWord} \n
          Current Word: ${stats.currentWords && stats.currentWords.map(x => x)} \n
-         Visible Words: ${stats.visibleWords.map(x => `\n ${x.word}, PosY: ${x.posY}`)} \n`
+         Visible Words: ${stats.visibleWords} \n`
     }
 }
 

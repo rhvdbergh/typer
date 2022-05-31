@@ -1,10 +1,9 @@
-import {IWord} from "./IWord";
-
 export interface IStats {
     score: number;
     level: number;
+    lives: number;
     register: string;
     userWord: string;
     currentWords: string[] | null;
-    visibleWords: IWord[];
+    visibleWords: string[];
 }

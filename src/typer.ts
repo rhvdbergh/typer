@@ -4,20 +4,10 @@ import {Stats} from "./models/Stats";
 import {setupView} from "./modules/viewService";
 
 async function main() {
-    let stats = new Stats(await wordService.getLevelWords(1))
+    let stats = new Stats(await wordService.getLevelWords(1));
     const keymap = await wordService.getKeymap();
     stats.visibleWords.push(wordService.pickRandomWordFrom(stats.levelWords));
-    console.log(stats);
     setupView(stats);
-
-    feedbackService.updateFeedback({
-        level: stats.level,
-        currentWords: stats.currentWords,
-        register: stats.register,
-        score: stats.score,
-        userWord: stats.userWord,
-        visibleWords: stats.visibleWords
-    })
 
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
 
@@ -26,7 +16,7 @@ async function main() {
         while (!newWordAdded && stats.visibleWords.length !== stats.levelWords.length) {
             let newWord = wordService.pickRandomWordFrom(stats.levelWords)
 
-            if (!stats.visibleWords.some(x => x.word === newWord.word)) {
+            if (!stats.visibleWords.some(x => x === newWord)) {
                 stats.visibleWords.push(newWord);
                 newWordAdded = true;
             }
@@ -41,7 +31,7 @@ async function main() {
         }
 
         if (stats.currentWords === null) {
-            const words = stats.visibleWords.filter(x => x.word[0] === stats.userWord).map(x => x.word);
+            const words = stats.visibleWords.filter(x => x[0] === stats.userWord);
             if (words !== undefined) {
                 stats.currentWords = new Array<string>();
                 words.forEach(word =>
@@ -67,15 +57,6 @@ async function main() {
             stats.userWord = '';
             stats.currentWords = null;
         }
-
-        feedbackService.updateFeedback({
-            level: stats.level,
-            currentWords: stats.currentWords,
-            register: stats.register,
-            score: stats.score,
-            userWord: stats.userWord,
-            visibleWords: stats.visibleWords
-        })
     }
 
     window.addEventListener("keyup", evaluateKeyPress);
@@ -88,8 +69,5 @@ async function main() {
 };
 
 main();
-
-function view() {
-}
 
 
