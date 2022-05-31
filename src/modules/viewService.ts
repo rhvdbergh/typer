@@ -15,6 +15,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     let level = stats.level;
     let score = stats.score;
     let lives = stats.lives;
+    let userWord = stats.userWord;
 
     // set up the pixi app
     const pixi = new PIXI.Application({width: pixiWidth, height: pixiHeight});
@@ -55,6 +56,15 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     livesDisplay.x = pixiWidth - 450;
     livesDisplay.y = 10;
 
+    let userWordDisplay = new PIXI.Text(`Building: ${userWord}`, {
+        fontSize: 24,
+        dropShadowColor: 'blue',
+        fill: ['#fff', '#aaa']
+    });
+
+    userWordDisplay.x = 10;
+    userWordDisplay.y = pixiHeight - userWordDisplay.height - 10;
+
     let gameOverDisplay = new PIXI.Text(`GAME OVER!`, {
         fontSize: 100,
         fontWeight: "bolder",
@@ -65,7 +75,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     gameOverDisplay.x = (pixiWidth / 2) - (gameOverDisplay.width / 2);
     gameOverDisplay.y = (pixiHeight / 2) - (gameOverDisplay.height / 2);
 
-    pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay);
+    pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay, userWordDisplay);
 
     const triggerGet = async () => {
         stats.levelWords = await wordService.getLevelWords(stats.level);
@@ -75,6 +85,16 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     pixi.ticker.add((delta) => {
 
         loopCounter++;
+
+        // clean up; if a word has been deleted, destroy the pixi object
+        let toBeDestroyed = shipContainers.filter(ship => !stats.visibleWords.includes(ship.word));
+        if (toBeDestroyed.length > 0) {
+            toBeDestroyed.forEach(tbd => {
+                let removeAtIndex = shipContainers.findIndex(ship => ship.word === tbd.word);
+                tbd.shipContainer.destroy();
+                shipContainers.splice(removeAtIndex, 1);
+            })
+        }
 
         if (loopCounter > 200) {
             loopCounter = 0;
@@ -136,6 +156,11 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             livesDisplay.text = `Lives: ${lives}`;
         }
 
+        if (userWord != stats.userWord) {
+            userWord = stats.userWord;
+            userWordDisplay.text = `Building: ${userWord}`;
+        }
+
         if (displayDevStats) feedbackService.updateFeedback(stats);
     })
 }
@@ -157,5 +182,5 @@ function initShipContainer(initText: string): IShip {
 }
 
 function randomX(shipWidth: number) {
-    return (Math.random() * window.innerWidth) - shipWidth;
+    return Math.abs((Math.random() * window.innerWidth) - shipWidth);
 }
