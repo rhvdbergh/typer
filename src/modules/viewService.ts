@@ -110,6 +110,21 @@ export async function setupView(stats: Stats) {
             pixi.ticker.stop();
         }
 
+        if (level != stats.level) {
+            level = stats.level;
+            levelDisplay.text = `Level: ${level}`;
+        }
+
+        if (score != stats.score) {
+            score = stats.score;
+            scoreDisplay.text = `Score: ${score}`;
+        }
+
+        if (lives != stats.lives) {
+            lives = stats.lives;
+            livesDisplay.text = `Lives: ${lives}`;
+        }
+
         feedbackService.updateFeedback(stats);
     })
 }
