@@ -26,7 +26,26 @@ export async function setupView(stats: Stats) {
     const triggerGet = async () => {
         stats.levelWords = await wordService.getLevelWords(stats.level);
     }
+    let loopCounter = 0;
     pixi.ticker.add((delta) => {
+
+        loopCounter++;
+
+        if (loopCounter > 200) {
+            loopCounter = 0;
+            let newWordAdded = false;
+            while (!newWordAdded && stats.visibleWords.length !== stats.levelWords.length) {
+                let newWord = wordService.pickRandomWordFrom(stats.levelWords)
+
+                if (!stats.visibleWords.some(x => x === newWord)) {
+                    stats.visibleWords.push(newWord);
+                    newWordAdded = true;
+                    shipContainers.push(initShipContainer(newWord));
+                    pixi.stage.addChild(shipContainers[shipContainers.length - 1].shipContainer);
+                }
+            }
+        }
+
         if (shipContainers.length > 0) {
 
             let removeAtIndex: number | undefined = undefined;
@@ -38,15 +57,16 @@ export async function setupView(stats: Stats) {
                         removeAtIndex = index;
                         ship.shipContainer.destroy()
                         wordService.removeFromWords(ship.word, stats.levelWords, stats.visibleWords)
-
                     }
                 }
             );
 
             if (removeAtIndex !== undefined) {
                 shipContainers.splice(removeAtIndex, 1);
-                stats.level++;
-                triggerGet();
+                if (stats.levelWords.length <= 0) {
+                    stats.level++;
+                    triggerGet();
+                }
             }
         }
 
@@ -67,9 +87,13 @@ function initShipContainer(initText: string): IShip {
 
     let shipContainer = new PIXI.Container();
 
-    shipContainer.x = text.width;
     shipContainer.y = 0;
+    shipContainer.x = randomX(shipContainer.x);
     shipContainer.addChild(text);
 
     return {word: initText, shipContainer};
+}
+
+function randomX(shipWidth: number) {
+    return (Math.random() * window.innerWidth) - shipWidth;
 }

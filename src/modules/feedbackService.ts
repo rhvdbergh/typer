@@ -11,7 +11,8 @@ class FeedbackService {
          Register: ${stats.register} \n
          User Word: ${stats.userWord} \n
          Current Word: ${stats.currentWords && stats.currentWords.map(x => x)} \n
-         Visible Words: ${stats.visibleWords} \n`
+         Visible Words: ${stats.visibleWords} \n
+         Level Words: ${stats.levelWords} \n`
     }
 }
 

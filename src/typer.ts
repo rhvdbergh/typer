@@ -11,17 +11,6 @@ async function main() {
 
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
 
-        // for now, we add a visible word each time, manually, on each keypress
-        let newWordAdded = false;
-        while (!newWordAdded && stats.visibleWords.length !== stats.levelWords.length) {
-            let newWord = wordService.pickRandomWordFrom(stats.levelWords)
-
-            if (!stats.visibleWords.some(x => x === newWord)) {
-                stats.visibleWords.push(newWord);
-                newWordAdded = true;
-            }
-        }
-
         stats.register += evt.key;
         if (Object.keys(keymap).includes(stats.register) && stats.register.length <= 2) {
             stats.userWord += keymap[stats.register];
