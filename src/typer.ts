@@ -1,5 +1,4 @@
 import wordService from "./modules/wordService";
-import feedbackService from "./modules/feedbackService";
 import {Stats} from "./models/Stats";
 import {setupView} from "./modules/viewService";
 
@@ -7,7 +6,7 @@ async function main() {
     let stats = new Stats(await wordService.getLevelWords(1));
     const keymap = await wordService.getKeymap();
     stats.visibleWords.push(wordService.pickRandomWordFrom(stats.levelWords));
-    setupView(stats);
+    await setupView(stats, true);
 
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
 
@@ -19,8 +18,8 @@ async function main() {
             stats.register = '';
         }
 
-        if (stats.currentWords === null) {
-            const words = stats.visibleWords.filter(x => x[0] === stats.userWord);
+        if (stats.currentWords === null || stats.currentWords.length > 1) {
+            const words = stats.visibleWords.filter(x => x.substring(0, stats.userWord.length) === stats.userWord);
             if (words !== undefined) {
                 stats.currentWords = new Array<string>();
                 words.forEach(word =>

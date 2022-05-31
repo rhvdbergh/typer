@@ -8,7 +8,7 @@ interface IShip {
     shipContainer: PIXI.Container;
 }
 
-export async function setupView(stats: Stats) {
+export async function setupView(stats: Stats, displayDevStats: boolean) {
     const pixiHeight = window.innerHeight;
     const pixiWidth = window.innerWidth;
 
@@ -96,7 +96,7 @@ export async function setupView(stats: Stats) {
             let removeAtIndex: number | undefined = undefined;
             shipContainers.forEach((ship, index) => {
                     if (ship.shipContainer.y < pixiHeight - ship.shipContainer.height) {
-                        ship.shipContainer.y += delta * 4;
+                        ship.shipContainer.y += delta;
                     } else {
                         stats.lives--;
                         removeAtIndex = index;
@@ -136,7 +136,7 @@ export async function setupView(stats: Stats) {
             livesDisplay.text = `Lives: ${lives}`;
         }
 
-        feedbackService.updateFeedback(stats);
+        if (displayDevStats) feedbackService.updateFeedback(stats);
     })
 }
 
