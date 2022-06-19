@@ -18,7 +18,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     let userWord = stats.userWord;
 
     // set up the pixi app
-    const pixi = new PIXI.Application({width: pixiWidth, height: pixiHeight});
+    const pixi = new PIXI.Application({width: pixiWidth, height: pixiHeight, backgroundColor: 0x555555});
     document.body.appendChild(pixi.view);
 
     let shipContainers = new Array<IShip>();
