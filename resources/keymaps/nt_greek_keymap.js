@@ -1,4 +1,4 @@
-const keymap = {
+const levelOneKeymap = {
 	a: 'α',
 	b: 'β',
 	c: 'χ',
@@ -50,6 +50,9 @@ const keymap = {
 	X: 'Χ',
 	Y: 'Υ',
 	Z: 'Ζ',
+}
+
+const levelTwoKeymap = {
 
 	Q: ':',
 	q: ';',
@@ -284,4 +287,7 @@ const keymap = {
 	'`': '·', // shift-alt-`
 }
 
-module.exports = keymap;
+module.exports.levelOneKeymap = levelOneKeymap;
+module.exports.levelTwoKeymap = levelTwoKeymap;
+
+module.exports.keymap = {...levelOneKeymap, ...levelTwoKeymap};
