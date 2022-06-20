@@ -317,23 +317,25 @@ const fifteenthStageKeymap = {
 	'`': '·', // shift-alt-`
 }
 
-module.exports.firstStageKeymap = firstStageKeymap;
-module.exports.secondStageKeymap = secondStageKeymap;
-module.exports.thirdStageKeymap = thirdStageKeymap;
-module.exports.fourthStageKeymap = fourthStageKeymap;
-module.exports.fifthStageKeymap = fifthStageKeymap;
-module.exports.sixthStageKeymap = sixthStageKeymap;
-module.exports.seventhStageKeymap = seventhStageKeymap;
-module.exports.eighthStageKeymap = eighthStageKeymap;
-module.exports.ninthStageKeymap = ninthStageKeymap;
-module.exports.tenthStageKeymap = tenthStageKeymap;
-module.exports.eleventhStageKeymap = eleventhStageKeymap;
-module.exports.twelfthStageKeymap = twelfthStageKeymap;
-module.exports.thirteenthStageKeymap = thirteenthStageKeymap;
-module.exports.fourteenthStageKeymap = fourteenthStageKeymap;
-module.exports.fifteenthStageKeymap = fifteenthStageKeymap;
+module.exports.keymaps = [
+	firstStageKeymap,
+	secondStageKeymap,
+	thirdStageKeymap,
+	fourthStageKeymap,
+	fifthStageKeymap,
+	sixthStageKeymap,
+	seventhStageKeymap,
+	eighthStageKeymap,
+	ninthStageKeymap,
+	tenthStageKeymap,
+	eleventhStageKeymap,
+	twelfthStageKeymap,
+	thirteenthStageKeymap,
+	fourteenthStageKeymap,
+	fifteenthStageKeymap
+];
 
-module.exports.keymap = {
+module.exports.fullKeymap = {
 	...firstStageKeymap,
 	...secondStageKeymap,
 	...thirdStageKeymap,

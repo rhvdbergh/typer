@@ -1,7 +1,7 @@
 export class Stats {
     constructor(levelWords) {
         this.score = 0;
-        this.level = 1;
+        this.level = 4;
         this.lives = 2;
         this.register = '';
         this.userWord = '';
