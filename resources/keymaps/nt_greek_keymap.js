@@ -1,62 +1,84 @@
-const levelOneKeymap = {
+const firstStageKeymap = {
 	a: 'α',
 	b: 'β',
 	c: 'χ',
 	d: 'δ',
 	e: 'ε',
-	f: 'φ',
 	g: 'γ',
 	h: 'η',
 	i: 'ι',
-	j: 'ξ',
 	k: 'κ',
-	l: 'λ',
 	m: 'μ',
-	n: 'ν',
 	o: 'ο',
 	p: 'π',
 	r: 'ρ',
 	s: 'σ',
 	t: 'τ',
-	u: 'θ',
 	v: 'ω',
-	w: 'ς',
 	x: 'χ',
-	y: 'υ',
-	z: 'ζ',
+}
 
+const secondStageKeymap = {
+	j: 'ξ',
+	u: 'θ',
+	w: 'ς',
+	z: 'ζ',
+	f: 'φ',
+	l: 'λ',
+	n: 'ν',
+	y: 'υ',
+}
+
+const thirdStageKeymap = {
+	';a': 'ά',
+	';e': 'έ',
+	';o': 'ό',
+	';i': 'ί',
+	';y': 'ύ',
+	';v': 'ώ',
+	';h': 'ή',
+}
+
+
+const fourthStageKeymap = {
 	A: 'Α',
 	B: 'Β',
 	C: 'Χ',
 	D: 'Δ',
 	E: 'Ε',
-	F: 'Φ',
 	G: 'Γ',
 	H: 'Η',
 	I: 'Ι',
-	J: 'Ξ',
 	K: 'Κ',
-	L: 'Λ',
 	M: 'Μ',
-	N: 'Ν',
 	O: 'Ο',
 	P: 'Π',
 	R: 'Ρ',
 	S: 'Σ',
 	T: 'Τ',
-	U: 'Θ',
 	V: 'Ω',
-	W: 'Σ',
 	X: 'Χ',
+	J: 'Ξ',
+	L: 'Λ',
+	N: 'Ν',
+	U: 'Θ',
+	W: 'Σ',
 	Y: 'Υ',
 	Z: 'Ζ',
+	F: 'Φ',
 }
 
-const levelTwoKeymap = {
+const fifthStageKeymap = {
+	';A': 'Ά',
+	';E': 'Έ',
+	';O': 'Ό',
+	';I': 'Ί',
+	';U': 'Ύ',
+	';V': 'Ώ',
+	';H': 'Ή',
+}
 
-	Q: ':',
-	q: ';',
-
+const sixthStageKeymap = {
 	"'e": 'ἐ',
 	"'a": 'ἀ',
 	"'i": 'ἰ',
@@ -71,7 +93,9 @@ const levelTwoKeymap = {
 	"'I": 'Ἰ',
 	"'O": 'Ὀ',
 	"'V": 'Ὠ',
+}
 
+const seventhStageKeymap = {
 	'"a': 'ἁ',
 	'"e': 'ἑ',
 	'"h': 'ἡ',
@@ -89,23 +113,9 @@ const levelTwoKeymap = {
 	'"Y': 'Ὑ',
 	'"V': 'Ὡ',
 	'"R': 'Ῥ',
+}
 
-	';a': 'ά',
-	';e': 'έ',
-	';o': 'ό',
-	';i': 'ί',
-	';y': 'ύ',
-	';v': 'ώ',
-	';h': 'ή',
-
-	';A': 'Ά',
-	';E': 'Έ',
-	';O': 'Ό',
-	';I': 'Ί',
-	';U': 'Ύ',
-	';V': 'Ώ',
-	';H': 'Ή',
-
+const eighthStageKeymap = {
 	']a': 'ὰ',
 	']e': 'ὲ',
 	']h': 'ὴ',
@@ -121,6 +131,11 @@ const levelTwoKeymap = {
 	']O': 'Ὸ',
 	']U': 'Ὺ',
 	']V': 'Ὼ',
+}
+
+const ninthStageKeymap = {
+	Q: ':',
+	q: ';',
 
 	'[a': 'ᾶ',
 	'[h': 'ῆ',
@@ -135,10 +150,9 @@ const levelTwoKeymap = {
 	'{A': 'ᾼ',
 	'{H': 'ῌ',
 	'{V': 'ῼ',
+}
 
-	':i': 'ϊ',
-	':y': 'ϋ',
-
+const tenthStageKeymap = {
 	'=a': 'ἂ',
 	'=e': 'ἒ',
 	'=h': 'ἢ',
@@ -168,7 +182,9 @@ const levelTwoKeymap = {
 	'+O': 'Ὃ',
 	'+Y': ' Ὓ',
 	'+V': 'Ὣ',
+}
 
+const eleventhStageKeymap = {
 	'/a': 'ἄ',
 	'/e': 'ἔ',
 	'/h': 'ἤ',
@@ -199,7 +215,9 @@ const levelTwoKeymap = {
 	'?O': 'Ὅ',
 	'?Y': ' Ὕ',
 	'?V': 'Ὥ',
+}
 
+const twelfthStageKeymap = {
 	'-a': 'ἆ',
 	'-h': 'ἦ',
 	'-i': 'ἶ',
@@ -222,16 +240,23 @@ const levelTwoKeymap = {
 	'_I': 'Ἷ',
 	'_Y': 'Ὗ',
 	'_V': 'Ὧ',
+}
 
-	'/{a': 'ᾄ',
-	'/{h': 'ᾔ',
+const thirteenthStageKeymap = {
 
-	'/{A': 'ᾌ',
-	'/{H': 'ᾜ',
+	';{a': 'ᾴ',
+	'{;a': 'ᾴ',
+	';{h': 'ῄ',
+	'{;h': 'ῄ',
+	';{v': 'ῴ',
+	'{;v': 'ῴ',
 
-	'?{a': 'ᾅ',
-
-	'?{A': 'ᾍ',
+	'{[a': 'ᾷ',
+	'[{a': 'ᾷ',
+	'{[h': 'ῇ',
+	'[{h': 'ῇ',
+	'{[v': 'ῷ',
+	'[{v': 'ῷ',
 
 	"'{h": 'ᾐ',
 	"{'h": 'ᾐ',
@@ -242,6 +267,19 @@ const levelTwoKeymap = {
 	"'{H": 'ᾘ',
 	"{'V": 'ᾨ',
 	"'{V": 'ᾨ',
+}
+
+const fourteenthStageKeymap = {
+	'/{a': 'ᾄ',
+	'/{h': 'ᾔ',
+
+	'/{A': 'ᾌ',
+	'/{H': 'ᾜ',
+
+	'?{a': 'ᾅ',
+
+	'?{A': 'ᾍ',
+
 
 	'"{h': 'ᾑ',
 	'{"h': 'ᾑ',
@@ -258,20 +296,12 @@ const levelTwoKeymap = {
 
 	'_{H': 'ᾟ',
 	'_{V': 'ᾯ',
+}
 
-	';{a': 'ᾴ',
-	'{;a': 'ᾴ',
-	';{h': 'ῄ',
-	'{;h': 'ῄ',
-	';{v': 'ῴ',
-	'{;v': 'ῴ',
+const fifteenthStageKeymap = {
 
-	'{[a': 'ᾷ',
-	'[{a': 'ᾷ',
-	'{[h': 'ῇ',
-	'[{h': 'ῇ',
-	'{[v': 'ῷ',
-	'[{v': 'ῷ',
+	':i': 'ϊ',
+	':y': 'ϋ',
 
 	'Wi': 'ΐ',
 	']:i': 'ῒ',
@@ -287,7 +317,36 @@ const levelTwoKeymap = {
 	'`': '·', // shift-alt-`
 }
 
-module.exports.levelOneKeymap = levelOneKeymap;
-module.exports.levelTwoKeymap = levelTwoKeymap;
+module.exports.firstStageKeymap = firstStageKeymap;
+module.exports.secondStageKeymap = secondStageKeymap;
+module.exports.thirdStageKeymap = thirdStageKeymap;
+module.exports.fourthStageKeymap = fourthStageKeymap;
+module.exports.fifthStageKeymap = fifthStageKeymap;
+module.exports.sixthStageKeymap = sixthStageKeymap;
+module.exports.seventhStageKeymap = seventhStageKeymap;
+module.exports.eighthStageKeymap = eighthStageKeymap;
+module.exports.ninthStageKeymap = ninthStageKeymap;
+module.exports.tenthStageKeymap = tenthStageKeymap;
+module.exports.eleventhStageKeymap = eleventhStageKeymap;
+module.exports.twelfthStageKeymap = twelfthStageKeymap;
+module.exports.thirteenthStageKeymap = thirteenthStageKeymap;
+module.exports.fourteenthStageKeymap = fourteenthStageKeymap;
+module.exports.fifteenthStageKeymap = fifteenthStageKeymap;
 
-module.exports.keymap = {...levelOneKeymap, ...levelTwoKeymap};
+module.exports.keymap = {
+	...firstStageKeymap,
+	...secondStageKeymap,
+	...thirdStageKeymap,
+	...fourthStageKeymap,
+	...fifthStageKeymap,
+	...sixthStageKeymap,
+	...seventhStageKeymap,
+	...eighthStageKeymap,
+	...ninthStageKeymap,
+	...tenthStageKeymap,
+	...eleventhStageKeymap,
+	...twelfthStageKeymap,
+	...thirteenthStageKeymap,
+	...fourteenthStageKeymap,
+	...fifteenthStageKeymap
+};
