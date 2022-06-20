@@ -8,6 +8,7 @@ const {
 
 router.get('/level/:level', function (req, res, next) {
 	const level = Number(req.params.level);
+	console.log('level', level);
 	switch (level) {
 		case 1:
 		case 2:

@@ -8,9 +8,11 @@ export class Stats {
     currentWords: string[] | null;
     visibleWords: string[];
 
+    static startingLevel = 1; // also set in the constructor below
+
     constructor(levelWords: string[]) {
         this.score = 0;
-        this.level = 4;
+        this.level = 1;
         this.lives = 2;
         this.register = '';
         this.userWord = '';
