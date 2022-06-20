@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const list = require('../resources/word_lists/nt_greek_word_list');
+const wordList = require('../resources/word_lists/nt_greek_word_list');
 const {
 	keymaps,
 	fullKeymap
@@ -8,25 +8,23 @@ const {
 
 router.get('/level/:level', function (req, res, next) {
 	const level = Number(req.params.level);
-	console.log('level', level);
-	switch (level) {
-		case 1:
-		case 2:
-		case 3:
+	switch (true) {
+		// for the first three levels, levels correspond with stages
+		case (level <= 3):
 			res.json(Object.values(keymaps[level - 1]));
 			break;
-		case 4:
-
-			console.log(selectWords(level, 3));
-			res.json(list);
-		case 5:
-			res.json(Object.values(keymaps[1]));
-			break;
-		case 3:
-			res.json(Object.values(keymaps[2]));
-			break;
+		case (level > 3 && level < 29):
+			// for stages 4 to 15, the levels do not correspond with stages
+			const stage = Math.ceil(level / 2) + 1;
+			if (level % 2 === 0) {
+				res.json(selectWordsForLevel(stage, Math.abs(stage / 2) + 1, stage < 10 ? 20 : 25));
+			} else {
+				res.json(Object.values(keymaps[stage - 1]));
+			}
+		case (level > 28):
+			res.json(selectWordsFromCompleteList(25));
 		default:
-			res.json(list);
+			res.json(selectWordsFromCompleteList(25));
 	}
 });
 
@@ -36,13 +34,54 @@ router.get('/keymap', function (req, res, next) {
 
 module.exports = router;
 
-const selectWords = (level, maxWordLength) => {
+const selectWordsForLevel = (level, maxWordLength, numWords) => {
 
 	let allowedSymbols = [];
 	for (let i = 0; i < level; i++) {
 		allowedSymbols.push(...Object.values(keymaps[i]));
 	}
-	console.log(allowedSymbols);
+
+	const wordPool = wordList.filter(word => word.length <= maxWordLength);
+	const selectedWords = [];
+
+	let safetyCounter = 0;
+	while (selectedWords.length < numWords || safetyCounter === 1500) {
+		let word = wordPool[pickRandomIndex(wordPool.length)];
+		console.log(word)
+		let choppedWord = word;
+
+		for (let i = 0; i < allowedSymbols.length - 1; i++) {
+			choppedWord = choppedWord.replaceAll(allowedSymbols[i], '');
+		}
+
+		if (choppedWord === '') {
+			selectedWords.push(word);
+		}
+		safetyCounter++;
+	}
+
+	if (safetyCounter === 1500) { // couldn't find enough words
+		// we're returning the symbol set so nothing breaks and the user has words to type
+		return allowedSymbols;
+	}
+
+	return selectedWords;
+}
+
+const selectWordsFromCompleteList = (numWords) => {
+
+	const selectedWords = [];
+
+	while (selectedWords.length < numWords) {
+		selectedWords.push(wordList[pickRandomIndex(wordList.length)]);
+	}
+
+	return selectedWords;
 
 }
+
+const pickRandomIndex = (arrayLength) => {
+	return Math.floor(Math.random() * arrayLength);
+}
+
 

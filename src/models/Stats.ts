@@ -8,7 +8,7 @@ export class Stats {
     currentWords: string[] | null;
     visibleWords: string[];
 
-    static startingLevel = 1; // also set in the constructor below
+    static startingLevel = 30; // also set in the constructor below
 
     constructor(levelWords: string[]) {
         this.score = 0;
