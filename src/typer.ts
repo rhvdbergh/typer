@@ -33,7 +33,7 @@ async function main() {
         if (stats.currentWords && stats.currentWords.includes(stats.userWord)) {
             let index = stats.currentWords.findIndex(x => x === stats.userWord);
             // we have a match!
-            stats.score++;
+            stats.score += stats.userWord.length;
             wordService.removeFromWords(stats.currentWords[index], stats.levelWords, stats.visibleWords);
             if (stats.levelWords.length === 0) {
                 stats.level++;

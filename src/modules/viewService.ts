@@ -100,7 +100,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
         let furthestShipY = -1;
         if (shipContainers.length > 0) furthestShipY = shipContainers[shipContainers.length - 1].shipContainer.y;
 
-        if (furthestShipY > pixiHeight / 2 || furthestShipY === -1) {
+        if (furthestShipY > (level < 15 ? (pixiHeight / 2) : (pixiHeight / 2.5)) || furthestShipY === -1) {
             let newWordAdded = false;
             while (!newWordAdded && stats.visibleWords.length !== stats.levelWords.length) {
                 let newWord = wordService.pickRandomWordFrom(stats.levelWords)
@@ -120,8 +120,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             shipContainers.forEach((ship, index) => {
                     if (ship.shipContainer.y < pixiHeight - ship.shipContainer.height) {
                         // set the ship speed
-                        ship.shipContainer.y += delta * level / 5;
-                        ship.shipContainer.rotation += (0.001 * level) * (Math.random() - Math.random());
+                        ship.shipContainer.y += delta * level / 25;
                     } else {
                         // it has crashed into the ground
                         stats.lives--;
