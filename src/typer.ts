@@ -3,8 +3,9 @@ import {Stats} from "./models/Stats";
 import {setupView} from "./modules/viewService";
 
 async function main() {
-    let stats = new Stats(await wordService.getLevelWords(Stats.startingLevel));
     const keymap = await wordService.getKeymap();
+    let stats = new Stats(await wordService.getLevelWords(Stats.startingLevel));
+    stats.keymap = keymap;
     stats.visibleWords.push(wordService.pickRandomWordFrom(stats.levelWords));
     await setupView(stats, true);
 

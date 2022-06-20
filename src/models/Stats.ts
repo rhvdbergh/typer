@@ -7,17 +7,19 @@ export class Stats {
     levelWords: string[];
     currentWords: string[] | null;
     visibleWords: string[];
+    keymap: string[];
 
-    static startingLevel = 6; // also set in the constructor below
+    static startingLevel = 1; // also set in the constructor below
 
     constructor(levelWords: string[]) {
         this.score = 0;
-        this.level = 6;
+        this.level = 1;
         this.lives = 2;
         this.register = '';
         this.userWord = '';
         this.levelWords = [...levelWords];
         this.visibleWords = new Array<string>();
         this.currentWords = null;
+        this.keymap = new Array<string>();
     }
 }
