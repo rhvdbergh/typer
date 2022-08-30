@@ -1,9 +1,11 @@
+import {ILevelInfo} from "../models/ILevelInfo";
+
 class WordService {
 
-    async getLevelWords(level: number): Promise<string[]> {
+    async getLevelInfo(level: number): Promise<ILevelInfo> {
         const response = await fetch(`/words/level/${level}`);
-        const words: string[] = await response.json();
-        return words;
+        const info: ILevelInfo = await response.json();
+        return info;
     }
 
     async getKeymap() {

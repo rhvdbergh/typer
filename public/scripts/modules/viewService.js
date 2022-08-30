@@ -24,7 +24,7 @@ export function setupView(stats, displayDevStats) {
         let shipContainers = new Array();
         // set up the first word's shipContainer
         let word = stats.visibleWords[0];
-        shipContainers.push(initShipContainer(word));
+        shipContainers.push(initShipContainer(word, stats));
         // set up the level, score, and lives text
         let scoreDisplay = new PIXI.Text(`Score: ${String(score)}`, {
             fontSize: 24,
@@ -67,7 +67,9 @@ export function setupView(stats, displayDevStats) {
             pixi.stage.removeChild(messageDisplay);
         }, 3000);
         const triggerGet = () => __awaiter(this, void 0, void 0, function* () {
-            stats.levelWords = yield wordService.getLevelWords(stats.level);
+            const levelInfo = yield wordService.getLevelInfo(stats.level);
+            stats.levelWords = levelInfo.levelWords;
+            stats.learningLevel = levelInfo.learningLevel;
         });
         pixi.ticker.add((delta) => {
             // clean up; if a word has been deleted, destroy the pixi object
@@ -82,14 +84,14 @@ export function setupView(stats, displayDevStats) {
             let furthestShipY = -1;
             if (shipContainers.length > 0)
                 furthestShipY = shipContainers[shipContainers.length - 1].shipContainer.y;
-            if (furthestShipY > pixiHeight / 2 || furthestShipY === -1) {
+            if (furthestShipY > (level < 15 ? (pixiHeight / 2) : (pixiHeight / 2.5)) || furthestShipY === -1) {
                 let newWordAdded = false;
                 while (!newWordAdded && stats.visibleWords.length !== stats.levelWords.length) {
                     let newWord = wordService.pickRandomWordFrom(stats.levelWords);
                     if (!stats.visibleWords.some(x => x === newWord)) {
                         stats.visibleWords.push(newWord);
                         newWordAdded = true;
-                        shipContainers.push(initShipContainer(newWord));
+                        shipContainers.push(initShipContainer(newWord, stats));
                         pixi.stage.addChild(shipContainers[shipContainers.length - 1].shipContainer);
                     }
                 }
@@ -99,8 +101,7 @@ export function setupView(stats, displayDevStats) {
                 shipContainers.forEach((ship, index) => {
                     if (ship.shipContainer.y < pixiHeight - ship.shipContainer.height) {
                         // set the ship speed
-                        ship.shipContainer.y += delta * level / 5;
-                        ship.shipContainer.rotation += (0.001 * level) * (Math.random() - Math.random());
+                        ship.shipContainer.y += delta * (level + 10) / 25;
                     }
                     else {
                         // it has crashed into the ground
@@ -155,17 +156,29 @@ export function setupView(stats, displayDevStats) {
         });
     });
 }
-function initShipContainer(initText) {
+function initShipContainer(initText, stats) {
+    showKeymapFor(initText, stats);
     let text = new PIXI.Text(initText, {
         fontSize: 24,
         dropShadowColor: 'blue',
         fill: ['#fff', '#aaa']
     });
+    let keymapText = new PIXI.Text(`(${showKeymapFor(initText, stats)})`, {
+        fontSize: 20,
+        fill: ['#ebd234', '#80ba29']
+    });
+    keymapText.y = 30;
+    keymapText.x = -6;
     let shipContainer = new PIXI.Container();
     shipContainer.addChild(text);
+    stats.learningLevel && shipContainer.addChild(keymapText);
     shipContainer.y = 0;
     shipContainer.x = randomX(shipContainer.width);
     return { word: initText, shipContainer };
+}
+function showKeymapFor(text, stats) {
+    let reverseKeymap = Object.fromEntries(Object.entries(stats.keymap).map(x => x.reverse()));
+    return text.split('').map(char => reverseKeymap[char]).join('');
 }
 function randomX(shipWidth) {
     return Math.abs((Math.random() * window.innerWidth) - shipWidth);

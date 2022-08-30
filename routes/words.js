@@ -7,24 +7,28 @@ const {
 } = require('../resources/keymaps/nt_greek_keymap');
 
 router.get('/level/:level', function (req, res, next) {
+	let learningLevel = false;
 	const level = Number(req.params.level);
 	switch (true) {
 		// for the first three levels, levels correspond with stages
 		case (level <= 3):
-			res.json(Object.values(keymaps[level - 1]));
+			res.json({learningLevel: true, levelWords: Object.values(keymaps[level - 1])});
 			break;
 		case (level > 3 && level < 29):
 			// for stages 4 to 15, the levels do not correspond with stages
 			const stage = Math.ceil(level / 2) + 1;
 			if (level % 2 === 0) {
-				res.json(selectWordsForLevel(stage, Math.abs(stage / 2) + 1, stage < 10 ? 20 : 25));
+				res.json({
+					learningLevel: false,
+					levelWords: selectWordsForLevel(stage, Math.abs(stage / 2) + 1, stage < 10 ? 20 : 25)
+				});
 			} else {
-				res.json(Object.values(keymaps[stage - 1]));
+				res.json({learningLevel: true, levelWords: Object.values(keymaps[stage - 1])});
 			}
 		case (level > 28):
-			res.json(selectWordsFromCompleteList(25));
+			res.json({learningLevel: false, levelWords: selectWordsFromCompleteList(25)});
 		default:
-			res.json(selectWordsFromCompleteList(25));
+			res.json({learningLevel: false, levelWords: selectWordsFromCompleteList(25)});
 	}
 });
 
@@ -47,7 +51,6 @@ const selectWordsForLevel = (level, maxWordLength, numWords) => {
 	let safetyCounter = 0;
 	while (selectedWords.length < numWords || safetyCounter === 1500) {
 		let word = wordPool[pickRandomIndex(wordPool.length)];
-		console.log(word)
 		let choppedWord = word;
 
 		for (let i = 0; i < allowedSymbols.length - 1; i++) {

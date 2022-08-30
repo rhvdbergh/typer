@@ -4,10 +4,10 @@ import {setupView} from "./modules/viewService";
 
 async function main() {
     const keymap = await wordService.getKeymap();
-    let stats = new Stats(await wordService.getLevelWords(Stats.startingLevel));
+    let stats = new Stats(await wordService.getLevelInfo(Stats.startingLevel));
     stats.keymap = keymap;
     stats.visibleWords.push(wordService.pickRandomWordFrom(stats.levelWords));
-    await setupView(stats, true);
+    await setupView(stats, false);
 
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
 
@@ -38,7 +38,9 @@ async function main() {
             wordService.removeFromWords(stats.currentWords[index], stats.levelWords, stats.visibleWords);
             if (stats.levelWords.length === 0) {
                 stats.level++;
-                stats.levelWords = await wordService.getLevelWords(stats.level);
+                const levelInfo = await wordService.getLevelInfo(stats.level);
+                stats.levelWords = levelInfo.levelWords;
+                stats.learningLevel = levelInfo.learningLevel;
             }
             stats.userWord = '';
             stats.currentWords = null;

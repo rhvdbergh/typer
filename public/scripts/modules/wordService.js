@@ -8,11 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 class WordService {
-    getLevelWords(level) {
+    getLevelInfo(level) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield fetch(`/words/level/${level}`);
-            const words = yield response.json();
-            return words;
+            const info = yield response.json();
+            return info;
         });
     }
     getKeymap() {

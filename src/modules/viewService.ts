@@ -25,7 +25,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
 
     // set up the first word's shipContainer
     let word = stats.visibleWords[0];
-    shipContainers.push(initShipContainer(word));
+    shipContainers.push(initShipContainer(word, stats));
 
     // set up the level, score, and lives text
     let scoreDisplay = new PIXI.Text(`Score: ${String(score)}`, {
@@ -81,11 +81,12 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
         pixi.stage.removeChild(messageDisplay);
     }, 3000)
     const triggerGet = async () => {
-        stats.levelWords = await wordService.getLevelWords(stats.level);
+        const levelInfo = await wordService.getLevelInfo(stats.level);
+        stats.levelWords = levelInfo.levelWords;
+        stats.learningLevel = levelInfo.learningLevel;
     }
 
     pixi.ticker.add((delta) => {
-
 
         // clean up; if a word has been deleted, destroy the pixi object
         let toBeDestroyed = shipContainers.filter(ship => !stats.visibleWords.includes(ship.word));
@@ -108,7 +109,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
                 if (!stats.visibleWords.some(x => x === newWord)) {
                     stats.visibleWords.push(newWord);
                     newWordAdded = true;
-                    shipContainers.push(initShipContainer(newWord));
+                    shipContainers.push(initShipContainer(newWord, stats));
                     pixi.stage.addChild(shipContainers[shipContainers.length - 1].shipContainer);
                 }
             }
@@ -120,7 +121,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             shipContainers.forEach((ship, index) => {
                     if (ship.shipContainer.y < pixiHeight - ship.shipContainer.height) {
                         // set the ship speed
-                        ship.shipContainer.y += delta * level / 25;
+                        ship.shipContainer.y += delta * (level + 10) / 25;
                     } else {
                         // it has crashed into the ground
                         stats.lives--;
@@ -181,20 +182,34 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     })
 }
 
-function initShipContainer(initText: string): IShip {
+function initShipContainer(initText: string, stats: Stats): IShip {
+    showKeymapFor(initText, stats);
     let text = new PIXI.Text(initText, {
         fontSize: 24,
         dropShadowColor: 'blue',
         fill: ['#fff', '#aaa']
     });
 
+    let keymapText = new PIXI.Text(`(${showKeymapFor(initText, stats)})`, {
+        fontSize: 20,
+        fill: ['#ebd234', '#80ba29']
+    });
+    keymapText.y = 30;
+    keymapText.x = -6;
+
     let shipContainer = new PIXI.Container();
 
     shipContainer.addChild(text);
+    stats.learningLevel && shipContainer.addChild(keymapText);
     shipContainer.y = 0;
     shipContainer.x = randomX(shipContainer.width);
 
     return {word: initText, shipContainer};
+}
+
+function showKeymapFor(text: string, stats: Stats): string {
+    let reverseKeymap = Object.fromEntries(Object.entries(stats.keymap).map(x => x.reverse()));
+    return text.split('').map(char => reverseKeymap[char]).join('');
 }
 
 function randomX(shipWidth: number) {

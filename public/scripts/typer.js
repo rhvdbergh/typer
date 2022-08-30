@@ -12,10 +12,11 @@ import { Stats } from "./models/Stats";
 import { setupView } from "./modules/viewService";
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        let stats = new Stats(yield wordService.getLevelWords(1));
         const keymap = yield wordService.getKeymap();
+        let stats = new Stats(yield wordService.getLevelInfo(Stats.startingLevel));
+        stats.keymap = keymap;
         stats.visibleWords.push(wordService.pickRandomWordFrom(stats.levelWords));
-        yield setupView(stats, true);
+        yield setupView(stats, false);
         const evaluateKeyPress = (evt) => __awaiter(this, void 0, void 0, function* () {
             stats.register += evt.key;
             if (Object.keys(keymap).includes(stats.register) && stats.register.length <= 2) {
@@ -38,11 +39,13 @@ function main() {
             if (stats.currentWords && stats.currentWords.includes(stats.userWord)) {
                 let index = stats.currentWords.findIndex(x => x === stats.userWord);
                 // we have a match!
-                stats.score++;
+                stats.score += stats.userWord.length;
                 wordService.removeFromWords(stats.currentWords[index], stats.levelWords, stats.visibleWords);
                 if (stats.levelWords.length === 0) {
                     stats.level++;
-                    stats.levelWords = yield wordService.getLevelWords(stats.level);
+                    const levelInfo = yield wordService.getLevelInfo(stats.level);
+                    stats.levelWords = levelInfo.levelWords;
+                    stats.learningLevel = levelInfo.learningLevel;
                 }
                 stats.userWord = '';
                 stats.currentWords = null;
