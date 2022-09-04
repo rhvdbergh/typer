@@ -10,7 +10,8 @@ export class Stats {
         this.visibleWords = new Array();
         this.currentWords = null;
         this.keymap = {};
-        this.paused = false;
+        this.singleKeymap = {};
+        this.translatedKey = '';
     }
 }
 Stats.startingLevel = 1; // also set in the constructor below

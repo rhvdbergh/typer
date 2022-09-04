@@ -18,6 +18,7 @@ export function setupView(stats, displayDevStats) {
         let score = stats.score;
         let lives = stats.lives;
         let userWord = stats.userWord;
+        let translatedKey = stats.translatedKey;
         // set up the pixi app
         const pixi = new PIXI.Application({ width: pixiWidth, height: pixiHeight, backgroundColor: 0x555555 });
         document.body.appendChild(pixi.view);
@@ -47,12 +48,12 @@ export function setupView(stats, displayDevStats) {
         });
         livesDisplay.x = pixiWidth - 450;
         livesDisplay.y = 10;
-        let userWordDisplay = new PIXI.Text(userWord, {
+        let userTranslatedKeyPress = new PIXI.Text(translatedKey, {
             fontSize: 64,
             dropShadowColor: 'blue',
             fill: ['#fff', '#aaa']
         });
-        centerUserWordDisplay();
+        centerUserTranslatedKeyPressDisplay();
         let messageDisplay = new PIXI.Text(`LEVEL ${level}!`, {
             fontSize: 100,
             fontWeight: "bolder",
@@ -60,7 +61,7 @@ export function setupView(stats, displayDevStats) {
             fill: ['#fff', '#aaa']
         });
         centerMessageDisplay();
-        pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay, userWordDisplay, messageDisplay);
+        pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay, userTranslatedKeyPress, messageDisplay);
         setTimeout(() => {
             pixi.stage.removeChild(messageDisplay);
         }, 3000);
@@ -147,10 +148,10 @@ export function setupView(stats, displayDevStats) {
                 lives = stats.lives;
                 livesDisplay.text = `Lives: ${lives}`;
             }
-            if (userWord != stats.userWord) {
-                userWord = stats.userWord;
-                userWordDisplay.text = userWord;
-                centerUserWordDisplay();
+            if (translatedKey != stats.translatedKey) {
+                translatedKey = stats.translatedKey;
+                userTranslatedKeyPress.text = translatedKey;
+                centerUserTranslatedKeyPressDisplay();
             }
             if (displayDevStats)
                 feedbackService.updateFeedback(stats);
@@ -176,9 +177,9 @@ export function setupView(stats, displayDevStats) {
             messageDisplay.x = (pixiWidth / 2) - (messageDisplay.width / 2);
             messageDisplay.y = (pixiHeight / 2) - (messageDisplay.height / 2);
         }
-        function centerUserWordDisplay() {
-            userWordDisplay.x = (pixiWidth / 2) - (userWordDisplay.width / 2);
-            userWordDisplay.y = pixiHeight - userWordDisplay.height - 50;
+        function centerUserTranslatedKeyPressDisplay() {
+            userTranslatedKeyPress.x = (pixiWidth / 2) - (userTranslatedKeyPress.width / 2);
+            userTranslatedKeyPress.y = pixiHeight - userTranslatedKeyPress.height - 50;
         }
     });
 }
@@ -193,8 +194,8 @@ function initShipContainer(initText, stats) {
         fontSize: 20,
         fill: ['#ebd234', '#80ba29']
     });
-    keymapText.y = 30;
-    keymapText.x = -6;
+    keymapText.y = 50;
+    keymapText.x = text.width / 2;
     let shipContainer = new PIXI.Container();
     shipContainer.addChild(text);
     stats.learningLevel && shipContainer.addChild(keymapText);

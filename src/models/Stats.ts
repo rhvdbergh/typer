@@ -11,7 +11,8 @@ export class Stats {
     currentWords: string[] | null;
     visibleWords: string[];
     keymap: object;
-    paused: boolean;
+    singleKeymap: object;
+    translatedKey: string;
 
     static startingLevel = 1; // also set in the constructor below
 
@@ -25,7 +26,8 @@ export class Stats {
         this.levelWords = [...levelInfo.levelWords];
         this.visibleWords = new Array<string>();
         this.currentWords = null;
-        this.keymap = {}
-        this.paused = false;
+        this.keymap = {};
+        this.singleKeymap = {};
+        this.translatedKey = '';
     }
 }

@@ -3,7 +3,8 @@ const router = express.Router();
 const wordList = require('../resources/word_lists/nt_greek_word_list');
 const {
 	keymaps,
-	fullKeymap
+	fullKeymap,
+	singleKeymap
 } = require('../resources/keymaps/nt_greek_keymap');
 
 router.get('/level/:level', function (req, res, next) {
@@ -33,7 +34,7 @@ router.get('/level/:level', function (req, res, next) {
 });
 
 router.get('/keymap', function (req, res, next) {
-	res.json(fullKeymap);
+	res.json({fullKeymap, singleKeymap});
 });
 
 module.exports = router;

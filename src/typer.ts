@@ -3,27 +3,36 @@ import {Stats} from "./models/Stats";
 import {setupView} from "./modules/viewService";
 
 async function main() {
-    const keymap = await wordService.getKeymap();
+    const keymaps = await wordService.getKeymap();
+    const keymap = keymaps.fullKeymap;
     let stats = new Stats(await wordService.getLevelInfo(Stats.startingLevel));
     stats.keymap = keymap;
+    stats.singleKeymap = keymaps.singleKeymap;
     stats.visibleWords.push(wordService.pickRandomWordFrom(stats.levelWords));
     await setupView(stats, false);
 
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
 
-        stats.register += evt.key;
+        type keyType = keyof typeof stats.keymap;
+        if (stats.singleKeymap[evt.key as keyType]) {
+            stats.translatedKey = stats.singleKeymap[evt.key as keyType];
+        }
+        console.log('stats + key', stats.register + evt.key);
+        if (stats.singleKeymap[stats.register + evt.key as keyType]) {
+            console.log('was true');
+            console.log('this is the entry', stats.singleKeymap[stats.register + evt.key as keyType]);
+            stats.translatedKey = stats.singleKeymap[stats.register + evt.key as keyType];
+        }
+
+        stats.register += evt.key.replace('Shift', '');
 
         if (evt.key === 'Enter') {
             await increaseLevel();
         }
 
-        if (evt.key === 'Escape') {
-            stats.paused = !stats.paused;
-            console.log('esc pressed, ', stats.paused)
-        }
-
         if (Object.keys(keymap).includes(stats.register) && stats.register.length <= 2) {
             stats.userWord += keymap[stats.register];
+            stats.translatedKey = keymap[stats.register];
             stats.register = '';
         } else if (stats.register.length >= 2) {
             stats.register = '';
