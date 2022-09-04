@@ -17,10 +17,7 @@ async function main() {
         if (stats.singleKeymap[evt.key as keyType]) {
             stats.translatedKey = stats.singleKeymap[evt.key as keyType];
         }
-        console.log('stats + key', stats.register + evt.key);
         if (stats.singleKeymap[stats.register + evt.key as keyType]) {
-            console.log('was true');
-            console.log('this is the entry', stats.singleKeymap[stats.register + evt.key as keyType]);
             stats.translatedKey = stats.singleKeymap[stats.register + evt.key as keyType];
         }
 
@@ -28,6 +25,10 @@ async function main() {
 
         if (evt.key === 'Enter') {
             await increaseLevel();
+        }
+
+        if (evt.key === 'Backspace') {
+            await increaseLevel(5);
         }
 
         if (Object.keys(keymap).includes(stats.register) && stats.register.length <= 2) {
@@ -50,8 +51,11 @@ async function main() {
             }
         }
 
-        async function increaseLevel() {
-            stats.level++;
+        async function increaseLevel(levelsToSkip: number = 1) {
+            stats.register = '';
+            stats.userWord = '';
+            stats.visibleWords = [];
+            stats.level += levelsToSkip;
             const levelInfo = await wordService.getLevelInfo(stats.level);
             stats.levelWords = levelInfo.levelWords;
             stats.learningLevel = levelInfo.learningLevel;

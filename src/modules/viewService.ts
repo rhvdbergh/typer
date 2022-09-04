@@ -4,6 +4,14 @@ import wordService from "./wordService";
 import feedbackService from "./feedbackService";
 import {Ticker} from "pixi.js";
 
+const feedbackColorA = '#fb5607';
+const feedbackColorB = '#A53603';
+const backgroundColor = 0xE4D4FB;
+const shipColorA = '#FF006E';
+const shipColorB = '#5D00FF';
+const translatedKeyColorA = '#A53603';
+const translatedKeyColorB = '#D9622B';
+
 interface IShip {
     word: string;
     shipContainer: PIXI.Container;
@@ -16,11 +24,10 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     let level = stats.level;
     let score = stats.score;
     let lives = stats.lives;
-    let userWord = stats.userWord;
     let translatedKey = stats.translatedKey;
 
     // set up the pixi app
-    const pixi = new PIXI.Application({width: pixiWidth, height: pixiHeight, backgroundColor: 0x555555});
+    const pixi = new PIXI.Application({width: pixiWidth, height: pixiHeight, backgroundColor});
     document.body.appendChild(pixi.view);
 
     let shipContainers = new Array<IShip>();
@@ -33,7 +40,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     let scoreDisplay = new PIXI.Text(`Score: ${String(score)}`, {
         fontSize: 24,
         dropShadowColor: 'blue',
-        fill: ['#fff', '#aaa']
+        fill: [feedbackColorA, feedbackColorB]
     });
 
     scoreDisplay.x = pixiWidth - 150;
@@ -42,7 +49,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
 
         fontSize: 24,
         dropShadowColor: 'blue',
-        fill: ['#fff', '#aaa']
+        fill: [feedbackColorA, feedbackColorB]
     });
 
     levelDisplay.x = pixiWidth - 300;
@@ -52,7 +59,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     let livesDisplay = new PIXI.Text(`Lives: ${String(lives)}`, {
         fontSize: 24,
         dropShadowColor: 'blue',
-        fill: ['#fff', '#aaa']
+        fill: [feedbackColorA, feedbackColorB]
     });
 
     livesDisplay.x = pixiWidth - 450;
@@ -61,7 +68,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     let userTranslatedKeyPress = new PIXI.Text(translatedKey, {
         fontSize: 64,
         dropShadowColor: 'blue',
-        fill: ['#fff', '#aaa']
+        fill: [translatedKeyColorA, translatedKeyColorB]
     });
 
     centerUserTranslatedKeyPressDisplay();
@@ -70,7 +77,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
         fontSize: 100,
         fontWeight: "bolder",
         dropShadowColor: 'yellow',
-        fill: ['#fff', '#aaa']
+        fill: [feedbackColorA, feedbackColorB]
     });
 
 
@@ -219,15 +226,15 @@ function initShipContainer(initText: string, stats: Stats): IShip {
     let text = new PIXI.Text(initText, {
         fontSize: 40,
         dropShadowColor: 'blue',
-        fill: ['#fff', '#aaa']
+        fill: [shipColorA, shipColorB]
     });
 
     let keymapText = new PIXI.Text(`(${showKeymapFor(initText, stats)})`, {
         fontSize: 20,
-        fill: ['#ebd234', '#80ba29']
+        fill: [feedbackColorA, feedbackColorB]
     });
     keymapText.y = 50;
-    keymapText.x = text.width / 2;
+    keymapText.x = text.width / 2 - keymapText.width / 2;
 
     let shipContainer = new PIXI.Container();
 

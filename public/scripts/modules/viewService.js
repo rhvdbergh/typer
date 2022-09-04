@@ -10,6 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as PIXI from 'pixi.js';
 import wordService from "./wordService";
 import feedbackService from "./feedbackService";
+const feedbackColorA = '#fb5607';
+const feedbackColorB = '#A53603';
+const backgroundColor = 0xE4D4FB;
+const shipColorA = '#FF006E';
+const shipColorB = '#5D00FF';
+const translatedKeyColorA = '#A53603';
+const translatedKeyColorB = '#D9622B';
 export function setupView(stats, displayDevStats) {
     return __awaiter(this, void 0, void 0, function* () {
         const pixiHeight = window.innerHeight;
@@ -17,10 +24,9 @@ export function setupView(stats, displayDevStats) {
         let level = stats.level;
         let score = stats.score;
         let lives = stats.lives;
-        let userWord = stats.userWord;
         let translatedKey = stats.translatedKey;
         // set up the pixi app
-        const pixi = new PIXI.Application({ width: pixiWidth, height: pixiHeight, backgroundColor: 0x555555 });
+        const pixi = new PIXI.Application({ width: pixiWidth, height: pixiHeight, backgroundColor });
         document.body.appendChild(pixi.view);
         let shipContainers = new Array();
         // set up the first word's shipContainer
@@ -30,35 +36,35 @@ export function setupView(stats, displayDevStats) {
         let scoreDisplay = new PIXI.Text(`Score: ${String(score)}`, {
             fontSize: 24,
             dropShadowColor: 'blue',
-            fill: ['#fff', '#aaa']
+            fill: [feedbackColorA, feedbackColorB]
         });
         scoreDisplay.x = pixiWidth - 150;
         scoreDisplay.y = 10;
         let levelDisplay = new PIXI.Text(`Level: ${String(level)}`, {
             fontSize: 24,
             dropShadowColor: 'blue',
-            fill: ['#fff', '#aaa']
+            fill: [feedbackColorA, feedbackColorB]
         });
         levelDisplay.x = pixiWidth - 300;
         levelDisplay.y = 10;
         let livesDisplay = new PIXI.Text(`Lives: ${String(lives)}`, {
             fontSize: 24,
             dropShadowColor: 'blue',
-            fill: ['#fff', '#aaa']
+            fill: [feedbackColorA, feedbackColorB]
         });
         livesDisplay.x = pixiWidth - 450;
         livesDisplay.y = 10;
         let userTranslatedKeyPress = new PIXI.Text(translatedKey, {
             fontSize: 64,
             dropShadowColor: 'blue',
-            fill: ['#fff', '#aaa']
+            fill: [translatedKeyColorA, translatedKeyColorB]
         });
         centerUserTranslatedKeyPressDisplay();
         let messageDisplay = new PIXI.Text(`LEVEL ${level}!`, {
             fontSize: 100,
             fontWeight: "bolder",
             dropShadowColor: 'yellow',
-            fill: ['#fff', '#aaa']
+            fill: [feedbackColorA, feedbackColorB]
         });
         centerMessageDisplay();
         pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay, userTranslatedKeyPress, messageDisplay);
@@ -188,14 +194,14 @@ function initShipContainer(initText, stats) {
     let text = new PIXI.Text(initText, {
         fontSize: 40,
         dropShadowColor: 'blue',
-        fill: ['#fff', '#aaa']
+        fill: [shipColorA, shipColorB]
     });
     let keymapText = new PIXI.Text(`(${showKeymapFor(initText, stats)})`, {
         fontSize: 20,
-        fill: ['#ebd234', '#80ba29']
+        fill: [feedbackColorA, feedbackColorB]
     });
     keymapText.y = 50;
-    keymapText.x = text.width / 2;
+    keymapText.x = text.width / 2 - keymapText.width / 2;
     let shipContainer = new PIXI.Container();
     shipContainer.addChild(text);
     stats.learningLevel && shipContainer.addChild(keymapText);

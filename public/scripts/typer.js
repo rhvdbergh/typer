@@ -23,15 +23,15 @@ function main() {
             if (stats.singleKeymap[evt.key]) {
                 stats.translatedKey = stats.singleKeymap[evt.key];
             }
-            console.log('stats + key', stats.register + evt.key);
             if (stats.singleKeymap[stats.register + evt.key]) {
-                console.log('was true');
-                console.log('this is the entry', stats.singleKeymap[stats.register + evt.key]);
                 stats.translatedKey = stats.singleKeymap[stats.register + evt.key];
             }
             stats.register += evt.key.replace('Shift', '');
             if (evt.key === 'Enter') {
                 yield increaseLevel();
+            }
+            if (evt.key === 'Backspace') {
+                yield increaseLevel(5);
             }
             if (Object.keys(keymap).includes(stats.register) && stats.register.length <= 2) {
                 stats.userWord += keymap[stats.register];
@@ -51,9 +51,12 @@ function main() {
                     stats.userWord = '';
                 }
             }
-            function increaseLevel() {
+            function increaseLevel(levelsToSkip = 1) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    stats.level++;
+                    stats.register = '';
+                    stats.userWord = '';
+                    stats.visibleWords = [];
+                    stats.level += levelsToSkip;
                     const levelInfo = yield wordService.getLevelInfo(stats.level);
                     stats.levelWords = levelInfo.levelWords;
                     stats.learningLevel = levelInfo.learningLevel;
