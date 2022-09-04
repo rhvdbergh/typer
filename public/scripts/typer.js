@@ -19,6 +19,13 @@ function main() {
         yield setupView(stats, false);
         const evaluateKeyPress = (evt) => __awaiter(this, void 0, void 0, function* () {
             stats.register += evt.key;
+            if (evt.key === 'Enter') {
+                yield increaseLevel();
+            }
+            if (evt.key === 'Escape') {
+                stats.paused = !stats.paused;
+                console.log('esc pressed, ', stats.paused);
+            }
             if (Object.keys(keymap).includes(stats.register) && stats.register.length <= 2) {
                 stats.userWord += keymap[stats.register];
                 stats.register = '';
@@ -36,16 +43,21 @@ function main() {
                     stats.userWord = '';
                 }
             }
+            function increaseLevel() {
+                return __awaiter(this, void 0, void 0, function* () {
+                    stats.level++;
+                    const levelInfo = yield wordService.getLevelInfo(stats.level);
+                    stats.levelWords = levelInfo.levelWords;
+                    stats.learningLevel = levelInfo.learningLevel;
+                });
+            }
             if (stats.currentWords && stats.currentWords.includes(stats.userWord)) {
                 let index = stats.currentWords.findIndex(x => x === stats.userWord);
                 // we have a match!
                 stats.score += stats.userWord.length;
                 wordService.removeFromWords(stats.currentWords[index], stats.levelWords, stats.visibleWords);
                 if (stats.levelWords.length === 0) {
-                    stats.level++;
-                    const levelInfo = yield wordService.getLevelInfo(stats.level);
-                    stats.levelWords = levelInfo.levelWords;
-                    stats.learningLevel = levelInfo.learningLevel;
+                    yield increaseLevel();
                 }
                 stats.userWord = '';
                 stats.currentWords = null;

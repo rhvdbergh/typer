@@ -71,7 +71,7 @@ export function setupView(stats, displayDevStats) {
             stats.levelWords = levelInfo.levelWords;
             stats.learningLevel = levelInfo.learningLevel;
         });
-        pixi.ticker.add((delta) => {
+        const ticker = pixi.ticker.add((delta) => {
             // clean up; if a word has been deleted, destroy the pixi object
             let toBeDestroyed = shipContainers.filter(ship => !stats.visibleWords.includes(ship.word));
             if (toBeDestroyed.length > 0) {
@@ -154,6 +154,22 @@ export function setupView(stats, displayDevStats) {
             if (displayDevStats)
                 feedbackService.updateFeedback(stats);
         });
+        handlePause(ticker);
+        function handlePause(ticker) {
+            window.addEventListener("keyup", (evt) => {
+                if (evt.key === 'Escape' && ticker.started) {
+                    pixi.stage.removeChild(messageDisplay);
+                    messageDisplay.text = "Paused";
+                    pixi.stage.addChild(messageDisplay);
+                    const timeToEnsureMessageDisplaysBeforeStop = 10;
+                    setTimeout(() => ticker.stop(), timeToEnsureMessageDisplaysBeforeStop);
+                }
+                else {
+                    pixi.stage.removeChild(messageDisplay);
+                    ticker.start();
+                }
+            });
+        }
     });
 }
 function initShipContainer(initText, stats) {

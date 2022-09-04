@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import {Stats} from "../models/Stats";
 import wordService from "./wordService";
 import feedbackService from "./feedbackService";
+import {Ticker} from "pixi.js";
 
 interface IShip {
     word: string;
@@ -86,7 +87,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
         stats.learningLevel = levelInfo.learningLevel;
     }
 
-    pixi.ticker.add((delta) => {
+    const ticker = pixi.ticker.add((delta) => {
 
         // clean up; if a word has been deleted, destroy the pixi object
         let toBeDestroyed = shipContainers.filter(ship => !stats.visibleWords.includes(ship.word));
@@ -180,6 +181,23 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
 
         if (displayDevStats) feedbackService.updateFeedback(stats);
     })
+
+    handlePause(ticker);
+
+    function handlePause(ticker: Ticker) {
+        window.addEventListener("keyup", (evt) => {
+            if (evt.key === 'Escape' && ticker.started) {
+                pixi.stage.removeChild(messageDisplay);
+                messageDisplay.text = "Paused";
+                pixi.stage.addChild(messageDisplay);
+                const timeToEnsureMessageDisplaysBeforeStop = 10;
+                setTimeout(() => ticker.stop(), timeToEnsureMessageDisplaysBeforeStop);
+            } else {
+                pixi.stage.removeChild(messageDisplay);
+                ticker.start();
+            }
+        });
+    }
 }
 
 function initShipContainer(initText: string, stats: Stats): IShip {

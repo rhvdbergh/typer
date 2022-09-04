@@ -12,6 +12,16 @@ async function main() {
     const evaluateKeyPress = async (evt: KeyboardEvent) => {
 
         stats.register += evt.key;
+
+        if (evt.key === 'Enter') {
+            await increaseLevel();
+        }
+
+        if (evt.key === 'Escape') {
+            stats.paused = !stats.paused;
+            console.log('esc pressed, ', stats.paused)
+        }
+
         if (Object.keys(keymap).includes(stats.register) && stats.register.length <= 2) {
             stats.userWord += keymap[stats.register];
             stats.register = '';
@@ -31,16 +41,20 @@ async function main() {
             }
         }
 
+        async function increaseLevel() {
+            stats.level++;
+            const levelInfo = await wordService.getLevelInfo(stats.level);
+            stats.levelWords = levelInfo.levelWords;
+            stats.learningLevel = levelInfo.learningLevel;
+        }
+
         if (stats.currentWords && stats.currentWords.includes(stats.userWord)) {
             let index = stats.currentWords.findIndex(x => x === stats.userWord);
             // we have a match!
             stats.score += stats.userWord.length;
             wordService.removeFromWords(stats.currentWords[index], stats.levelWords, stats.visibleWords);
             if (stats.levelWords.length === 0) {
-                stats.level++;
-                const levelInfo = await wordService.getLevelInfo(stats.level);
-                stats.levelWords = levelInfo.levelWords;
-                stats.learningLevel = levelInfo.learningLevel;
+                await increaseLevel();
             }
             stats.userWord = '';
             stats.currentWords = null;

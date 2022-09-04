@@ -6,4 +6,5 @@ export interface IStats {
     userWord: string;
     currentWords: string[] | null;
     visibleWords: string[];
+    paused: boolean;
 }
