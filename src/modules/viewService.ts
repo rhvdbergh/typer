@@ -7,10 +7,10 @@ import {Ticker} from "pixi.js";
 const feedbackColorA = '#fb5607';
 const feedbackColorB = '#A53603';
 const backgroundColor = 0xC6DCFF;
-const shipColorA = '#FF006E';
-const shipColorB = '#5D00FF';
-const translatedKeyColorA = '#A53603';
-const translatedKeyColorB = '#D9622B';
+const shipColorA = '#000';
+const shipColorB = '#000';
+const translatedKeyColorA = '#000';
+const translatedKeyColorB = '#000';
 
 interface IShip {
     word: string;
@@ -162,7 +162,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             shipContainers.forEach((ship, index) => {
                     if (ship.shipContainer.y < pixiHeight - ship.shipContainer.height) {
                         // set the ship speed
-                        ship.shipContainer.y += delta * (level + 10) / 25;
+                        ship.shipContainer.y += delta * (level + 10) / 50;
                     } else {
                         // it has crashed into the ground
                         stats.lives--;
