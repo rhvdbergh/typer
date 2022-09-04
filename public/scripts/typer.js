@@ -30,7 +30,7 @@ function main() {
             if (evt.key === 'Enter') {
                 yield increaseLevel();
             }
-            if (evt.key === 'Backspace') {
+            if (evt.key === 'Backspace' || evt.key === 'Delete') {
                 yield increaseLevel(5);
             }
             if (Object.keys(keymap).includes(stats.register) && stats.register.length <= 2) {

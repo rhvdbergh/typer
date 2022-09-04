@@ -12,7 +12,7 @@ import wordService from "./wordService";
 import feedbackService from "./feedbackService";
 const feedbackColorA = '#fb5607';
 const feedbackColorB = '#A53603';
-const backgroundColor = 0xE4D4FB;
+const backgroundColor = 0xC6DCFF;
 const shipColorA = '#FF006E';
 const shipColorB = '#5D00FF';
 const translatedKeyColorA = '#A53603';
@@ -67,6 +67,36 @@ export function setupView(stats, displayDevStats) {
             fill: [feedbackColorA, feedbackColorB]
         });
         centerMessageDisplay();
+        let pauseMessageContainer = new PIXI.Container;
+        let pauseMessageTitle = new PIXI.Text('PAUSED', {
+            fontSize: 100,
+            fontWeight: "bolder",
+            dropShadowColor: 'yellow',
+            align: 'center',
+            lineHeight: 3,
+            fill: [feedbackColorA, feedbackColorB]
+        });
+        let pauseMessageBody = new PIXI.Text(`Learn to type Polytonic Greek on a QWERTY Keyboard!
+        
+        - Type the words before they reach the bottom of the screen.
+        - For some levels, the correct keys that will produce a character or word
+          will be displayed below that word in brackets.
+        - Some Greek characters require more than one key to be pressed.
+        - The most recent Greek character produced by your keystrokes 
+          will be displayed at the bottom of the screen.
+        
+        Pressing Enter will skip one level, backspace or delete 
+        will skip five levels.`, {
+            fontSize: 20,
+            fontWeight: "bolder",
+            dropShadowColor: 'yellow',
+            align: 'center',
+            fill: [feedbackColorA, feedbackColorB]
+        });
+        pauseMessageContainer.addChild(pauseMessageTitle, pauseMessageBody);
+        pauseMessageTitle.x = pauseMessageContainer.width / 2 - pauseMessageTitle.width / 2;
+        pauseMessageBody.y = pauseMessageTitle.height + 50;
+        centerPauseMessage();
         pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay, userTranslatedKeyPress, messageDisplay);
         setTimeout(() => {
             pixi.stage.removeChild(messageDisplay);
@@ -167,14 +197,13 @@ export function setupView(stats, displayDevStats) {
             window.addEventListener("keyup", (evt) => {
                 if (evt.key === 'Escape' && ticker.started) {
                     pixi.stage.removeChild(messageDisplay);
-                    messageDisplay.text = "Paused";
                     centerMessageDisplay();
-                    pixi.stage.addChild(messageDisplay);
+                    pixi.stage.addChild(pauseMessageContainer);
                     const timeToEnsureMessageDisplaysBeforeStop = 10;
                     setTimeout(() => ticker.stop(), timeToEnsureMessageDisplaysBeforeStop);
                 }
                 else {
-                    pixi.stage.removeChild(messageDisplay);
+                    pixi.stage.removeChild(pauseMessageContainer);
                     ticker.start();
                 }
             });
@@ -186,6 +215,10 @@ export function setupView(stats, displayDevStats) {
         function centerUserTranslatedKeyPressDisplay() {
             userTranslatedKeyPress.x = (pixiWidth / 2) - (userTranslatedKeyPress.width / 2);
             userTranslatedKeyPress.y = pixiHeight - userTranslatedKeyPress.height - 50;
+        }
+        function centerPauseMessage() {
+            pauseMessageContainer.x = (pixiWidth / 2) - (pauseMessageContainer.width / 2);
+            pauseMessageContainer.y = (pixiHeight / 2) - (pauseMessageContainer.height / 2);
         }
     });
 }

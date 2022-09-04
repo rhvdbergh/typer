@@ -27,7 +27,7 @@ async function main() {
             await increaseLevel();
         }
 
-        if (evt.key === 'Backspace') {
+        if (evt.key === 'Backspace' || evt.key === 'Delete') {
             await increaseLevel(5);
         }
 
