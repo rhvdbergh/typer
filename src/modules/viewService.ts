@@ -57,14 +57,13 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     livesDisplay.x = pixiWidth - 450;
     livesDisplay.y = 10;
 
-    let userWordDisplay = new PIXI.Text(`Building: ${userWord}`, {
-        fontSize: 24,
+    let userWordDisplay = new PIXI.Text(userWord, {
+        fontSize: 64,
         dropShadowColor: 'blue',
         fill: ['#fff', '#aaa']
     });
 
-    userWordDisplay.x = 10;
-    userWordDisplay.y = pixiHeight - userWordDisplay.height - 10;
+    centerUserWordDisplay();
 
     let messageDisplay = new PIXI.Text(`LEVEL ${level}!`, {
         fontSize: 100,
@@ -73,8 +72,8 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
         fill: ['#fff', '#aaa']
     });
 
-    messageDisplay.x = (pixiWidth / 2) - (messageDisplay.width / 2);
-    messageDisplay.y = (pixiHeight / 2) - (messageDisplay.height / 2);
+
+    centerMessageDisplay();
 
     pixi.stage.addChild(shipContainers[0].shipContainer, livesDisplay, scoreDisplay, levelDisplay, userWordDisplay, messageDisplay);
 
@@ -144,6 +143,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
 
         if (stats.lives <= 0) {
             messageDisplay.text = `GAME OVER!`;
+            centerMessageDisplay();
             pixi.stage.addChild(messageDisplay);
             pixi.ticker.stop();
             setTimeout(() => {
@@ -156,6 +156,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             level = stats.level;
             levelDisplay.text = `Level: ${level}`;
             messageDisplay.text = `Level ${level}`;
+            centerMessageDisplay();
             pixi.stage.addChild(messageDisplay);
             pixi.ticker.stop();
             setTimeout(() => {
@@ -176,7 +177,8 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
 
         if (userWord != stats.userWord) {
             userWord = stats.userWord;
-            userWordDisplay.text = `Building: ${userWord}`;
+            userWordDisplay.text = userWord;
+            centerUserWordDisplay()
         }
 
         if (displayDevStats) feedbackService.updateFeedback(stats);
@@ -189,6 +191,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             if (evt.key === 'Escape' && ticker.started) {
                 pixi.stage.removeChild(messageDisplay);
                 messageDisplay.text = "Paused";
+                centerMessageDisplay();
                 pixi.stage.addChild(messageDisplay);
                 const timeToEnsureMessageDisplaysBeforeStop = 10;
                 setTimeout(() => ticker.stop(), timeToEnsureMessageDisplaysBeforeStop);
@@ -198,12 +201,22 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             }
         });
     }
+
+    function centerMessageDisplay() {
+        messageDisplay.x = (pixiWidth / 2) - (messageDisplay.width / 2);
+        messageDisplay.y = (pixiHeight / 2) - (messageDisplay.height / 2);
+    }
+
+    function centerUserWordDisplay() {
+        userWordDisplay.x = (pixiWidth / 2) - (userWordDisplay.width / 2);
+        userWordDisplay.y = pixiHeight - userWordDisplay.height - 50;
+    }
 }
 
 function initShipContainer(initText: string, stats: Stats): IShip {
     showKeymapFor(initText, stats);
     let text = new PIXI.Text(initText, {
-        fontSize: 24,
+        fontSize: 40,
         dropShadowColor: 'blue',
         fill: ['#fff', '#aaa']
     });
