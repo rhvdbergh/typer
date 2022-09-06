@@ -1,16 +1,15 @@
 import {ILevelInfo} from "../models/ILevelInfo";
+import {getKeymap, getLevel} from "./wordRepo";
 
 class WordService {
 
     async getLevelInfo(level: number): Promise<ILevelInfo> {
-        const response = await fetch(`/words/level/${level}`);
-        const info: ILevelInfo = await response.json();
+        const info = await getLevel(level);
         return info;
     }
 
     async getKeymap() {
-        const response = await fetch(`/words/keymap`);
-        const keymap = await response.json();
+        const keymap = await getKeymap();
         return keymap;
     }
 

@@ -12,6 +12,7 @@ export class Stats {
         this.keymap = {};
         this.singleKeymap = {};
         this.translatedKey = '';
+        this.highScore = 0;
     }
 }
 Stats.startingLevel = 1; // also set in the constructor below

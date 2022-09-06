@@ -7,18 +7,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { getKeymap, getLevel } from "./wordRepo";
 class WordService {
     getLevelInfo(level) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch(`/words/level/${level}`);
-            const info = yield response.json();
+            const info = yield getLevel(level);
             return info;
         });
     }
     getKeymap() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch(`/words/keymap`);
-            const keymap = yield response.json();
+            const keymap = yield getKeymap();
             return keymap;
         });
     }

@@ -11,10 +11,12 @@ import wordService from "./modules/wordService";
 import { Stats } from "./models/Stats";
 import { setupView } from "./modules/viewService";
 function main() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const keymaps = yield wordService.getKeymap();
         const keymap = keymaps.fullKeymap;
         let stats = new Stats(yield wordService.getLevelInfo(Stats.startingLevel));
+        stats.highScore = Number((_a = localStorage.getItem('typer_high_score')) !== null && _a !== void 0 ? _a : '0');
         stats.keymap = keymap;
         stats.singleKeymap = keymaps.singleKeymap;
         stats.visibleWords.push(wordService.pickRandomWordFrom(stats.levelWords));

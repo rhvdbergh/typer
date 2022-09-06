@@ -13,10 +13,10 @@ import feedbackService from "./feedbackService";
 const feedbackColorA = '#fb5607';
 const feedbackColorB = '#A53603';
 const backgroundColor = 0xC6DCFF;
-const shipColorA = '#FF006E';
-const shipColorB = '#5D00FF';
-const translatedKeyColorA = '#A53603';
-const translatedKeyColorB = '#D9622B';
+const shipColorA = '#000';
+const shipColorB = '#000';
+const translatedKeyColorA = '#000';
+const translatedKeyColorB = '#000';
 export function setupView(stats, displayDevStats) {
     return __awaiter(this, void 0, void 0, function* () {
         const pixiHeight = window.innerHeight;
@@ -26,7 +26,7 @@ export function setupView(stats, displayDevStats) {
         let lives = stats.lives;
         let translatedKey = stats.translatedKey;
         // set up the pixi app
-        const pixi = new PIXI.Application({ width: pixiWidth, height: pixiHeight, backgroundColor });
+        const pixi = new PIXI.Application({ width: pixiWidth, height: pixiHeight, backgroundColor, resizeTo: window });
         document.body.appendChild(pixi.view);
         let shipContainers = new Array();
         // set up the first word's shipContainer
@@ -86,7 +86,10 @@ export function setupView(stats, displayDevStats) {
           will be displayed at the bottom of the screen.
         
         Pressing Enter will skip one level, backspace or delete 
-        will skip five levels.`, {
+        will skip five levels.
+        
+        High score: ${stats.highScore}
+        `, {
             fontSize: 20,
             fontWeight: "bolder",
             dropShadowColor: 'yellow',
@@ -136,7 +139,7 @@ export function setupView(stats, displayDevStats) {
                 shipContainers.forEach((ship, index) => {
                     if (ship.shipContainer.y < pixiHeight - ship.shipContainer.height) {
                         // set the ship speed
-                        ship.shipContainer.y += delta * (level + 10) / 25;
+                        ship.shipContainer.y += delta * (level + 10) / 40;
                     }
                     else {
                         // it has crashed into the ground
@@ -155,7 +158,14 @@ export function setupView(stats, displayDevStats) {
                 }
             }
             if (stats.lives <= 0) {
-                messageDisplay.text = `GAME OVER!`;
+                if (score > stats.highScore) {
+                    localStorage.setItem('typer_high_score', score + '');
+                    stats.highScore = score;
+                    messageDisplay.text = `GAME OVER!\nNew High Score: ${stats.highScore}`;
+                }
+                else {
+                    messageDisplay.text = `GAME OVER!`;
+                }
                 centerMessageDisplay();
                 pixi.stage.addChild(messageDisplay);
                 pixi.ticker.stop();

@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "build": "tsc",
-    "deploy": "scripts/deploy.sh"
+    "deploy": ""
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
