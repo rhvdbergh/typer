@@ -6,6 +6,7 @@ async function main() {
     const keymaps = await wordService.getKeymap();
     const keymap = keymaps.fullKeymap;
     let stats = new Stats(await wordService.getLevelInfo(Stats.startingLevel));
+    stats.highScore = Number(localStorage.getItem('typer_high_score') ?? '0');
     stats.keymap = keymap;
     stats.singleKeymap = keymaps.singleKeymap;
     stats.visibleWords.push(wordService.pickRandomWordFrom(stats.levelWords));

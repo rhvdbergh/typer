@@ -27,7 +27,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
     let translatedKey = stats.translatedKey;
 
     // set up the pixi app
-    const pixi = new PIXI.Application({width: pixiWidth, height: pixiHeight, backgroundColor});
+    const pixi = new PIXI.Application({width: pixiWidth, height: pixiHeight, backgroundColor, resizeTo: window});
     document.body.appendChild(pixi.view);
 
     let shipContainers = new Array<IShip>();
@@ -102,7 +102,10 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
           will be displayed at the bottom of the screen.
         
         Pressing Enter will skip one level, backspace or delete 
-        will skip five levels.`, {
+        will skip five levels.
+        
+        High score: ${stats.highScore}
+        `, {
             fontSize: 20,
             fontWeight: "bolder",
             dropShadowColor: 'yellow',
@@ -162,7 +165,7 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
             shipContainers.forEach((ship, index) => {
                     if (ship.shipContainer.y < pixiHeight - ship.shipContainer.height) {
                         // set the ship speed
-                        ship.shipContainer.y += delta * (level + 10) / 50;
+                        ship.shipContainer.y += delta * (level + 10) / 40;
                     } else {
                         // it has crashed into the ground
                         stats.lives--;
@@ -183,7 +186,13 @@ export async function setupView(stats: Stats, displayDevStats: boolean) {
         }
 
         if (stats.lives <= 0) {
-            messageDisplay.text = `GAME OVER!`;
+            if (score > stats.highScore) {
+                localStorage.setItem('typer_high_score', score + '');
+                stats.highScore = score;
+                messageDisplay.text = `GAME OVER!\nNew High Score: ${stats.highScore}`;
+            } else {
+                messageDisplay.text = `GAME OVER!`;
+            }
             centerMessageDisplay();
             pixi.stage.addChild(messageDisplay);
             pixi.ticker.stop();

@@ -13,6 +13,7 @@ export class Stats {
     keymap: object;
     singleKeymap: object;
     translatedKey: string;
+    highScore: number;
 
     static startingLevel = 1; // also set in the constructor below
 
@@ -29,5 +30,6 @@ export class Stats {
         this.keymap = {};
         this.singleKeymap = {};
         this.translatedKey = '';
+        this.highScore = 0;
     }
 }
