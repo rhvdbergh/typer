@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "build": "tsc"
+    "build": "tsc",
+    "deploy": "scripts/deploy.sh"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
