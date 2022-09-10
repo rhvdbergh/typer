@@ -56,7 +56,9 @@ const selectWordsForLevel = (level, maxWordLength, numWords) => {
 const selectWordsFromCompleteList = (numWords) => {
     const selectedWords = [];
     while (selectedWords.length < numWords) {
-        selectedWords.push(wordList[pickRandomIndex(wordList.length)]);
+        const newWord = wordList[pickRandomIndex(wordList.length)];
+        if (newWord && newWord !== '' && newWord.replace(' ').length > 0)
+            selectedWords.push(newWord);
     }
     return selectedWords;
 };
